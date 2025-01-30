@@ -4,7 +4,7 @@ using Data.Interfaces;
 
 namespace Data.Repositories;
 
-public class ProjectManagerRepository(DataContext context) : BaseRepository<ProjectManagerEntity>(context), IProjectManagerRepository
+public class EmployeeRepository(DataContext context) : BaseRepository<EmployeeEntity>(context), IEmployeeRepository
 {
     private readonly DataContext _context = context;
 }

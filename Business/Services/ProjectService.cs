@@ -10,16 +10,17 @@ namespace Business.Services;
 
 public class ProjectService(IProjectRepository repository, IProjectFactory factory) : IProjectService
 {
-    private readonly IProjectRepository _repository = repository;
+    private readonly IProjectRepository _projectRepository = repository;
     private readonly IProjectFactory _projectFactory = factory;
     public async Task<bool> CreateProjectAsync(ProjectRegistrationForm form)
     {
         try
         {
-            var entity = await _repository.GetAsync(x => x.ProjectName == form.ProjectName);
+            var entity = await _projectRepository.GetAsync(x => x.ProjectName == form.ProjectName);
             if (entity == null)
             {
-                entity = await _repository.CreateAsync(await _projectFactory.Create(form));
+                entity = await _projectFactory.Create(form);
+                await _projectRepository.CreateAsync(entity);
                 return true;
             }
 
@@ -32,28 +33,37 @@ public class ProjectService(IProjectRepository repository, IProjectFactory facto
         }
     }
 
-    public Task<Project> GetProjectAsync(Expression<Func<ProjectEntity, bool>> expression)
+    public async Task<IEnumerable<Project>> GetAllProjectAsync()
     {
-        throw new NotImplementedException();
+        var entities = await _projectRepository.GetAllAsync();
+        var projects = entities.Select(_projectFactory.Create);
+        return projects;
     }
 
-    public Task<IEnumerable<Project>> GetProjectsAsync()
+    public async Task<Project> GetProjectAsync(Expression<Func<ProjectEntity, bool>> expression)
     {
-        throw new NotImplementedException();
+        var entity = await _projectRepository.GetAsync(expression);
+        var project = _projectFactory.Create(entity);
+
+        return project;
     }
 
-    public Task<Project> UpdateProjectAsync(Project updatedProject)
+    public async Task<Project> UpdateProjectAsync(Expression<Func<ProjectEntity, bool>> expression, ProjectEntity updatedProject)
     {
-        throw new NotImplementedException();
+        var entity = await _projectRepository.UpdateAsync(expression, updatedProject);
+        var project = _projectFactory.Create(updatedProject);
+
+        return project;
     }
 
-    public Task<bool> DeleteProjectAsync(int id)
+    public async Task<bool> DeleteProjectAsync(Expression<Func<ProjectEntity, bool>> expression)
     {
-        throw new NotImplementedException();
+        var result = await _projectRepository.DeleteAsync(expression);
+        return result;
     }
 
-    public Task<bool> CheckIfExistsAsync(Expression<Func<ProjectEntity, bool>> expression)
+    public async Task<bool> CheckIfExistsAsync(Expression<Func<ProjectEntity, bool>> expression)
     {
-        throw new NotImplementedException();
+        return await _projectRepository.ExistsAsync(expression);
     }
 }

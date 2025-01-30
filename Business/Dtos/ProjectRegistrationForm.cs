@@ -20,7 +20,7 @@ public class ProjectRegistrationForm
     public string CurrentStatus { get; set; } = null!;
 
     [Required]
-    public ProjectManagerEntity ProjectManager { get; set; } = null!;
+    public EmployeeEntity ProjectManager { get; set; } = new();
 
     [Required]
     public string ServiceName { get; set; } = null!;

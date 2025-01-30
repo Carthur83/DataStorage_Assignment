@@ -8,7 +8,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<CustomerEntity> Customers { get; set; }
     public DbSet<StatusEntity> Statuses { get; set; }
     public DbSet<ProjectEntity> Projects { get; set; }
-    public DbSet<ProjectManagerEntity> ProjectManagers { get; set; }
+    public DbSet<EmployeeEntity> Employees { get; set; }
     public DbSet<ServiceEntity> Services { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

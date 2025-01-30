@@ -1,8 +1,9 @@
-﻿using Data.Entities;
+﻿using Business.Interfaces;
+using Data.Entities;
 using Data.Interfaces;
 using Data.Repositories;
 namespace Business.Services;
-public class ServiceService(IServiceRepository serviceRepository)
+public class ServiceService(IServiceRepository serviceRepository) : IServiceService
 {
 
     private readonly IServiceRepository _serviceRepository = serviceRepository;

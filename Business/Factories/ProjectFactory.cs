@@ -5,17 +5,19 @@ using Data.Entities;
 
 namespace Business.Factories;
 
-public class ProjectFactory(ICustomerService customerService, IProjectManagerService projectManagerService) : IProjectFactory
+public class ProjectFactory(ICustomerService customerService, IEmployeeService employeeService, IServiceService serviceService) : IProjectFactory
 {
     private readonly ICustomerService _customerService = customerService;
-    private readonly IProjectManagerService _projectManagerService = projectManagerService;
+    private readonly IEmployeeService _employeeService = employeeService;
+    private readonly IServiceService _serviceService = serviceService;
 
     public ProjectRegistrationForm Create() => new();
 
     public async Task<ProjectEntity> Create(ProjectRegistrationForm form)
     {
         var customerEntity = await _customerService.CreateCustomerAsync(form.CustomerName);
-        var projectManagerEntity = await _projectManagerService.CreateAsync(form.ProjectManager);
+        var employeeEntity = await _employeeService.CreateAsync(form.ProjectManager);
+        var serviceEntity = await _serviceService.CreateCustomerAsync(form.ServiceName);
 
         return new ProjectEntity
         {
@@ -24,8 +26,8 @@ public class ProjectFactory(ICustomerService customerService, IProjectManagerSer
             EndDate = form.EndDate,
             Customer = customerEntity,
             StatusId = 1,
-            ProjectManager = projectManagerEntity,
-
+            Employee = employeeEntity,
+            Service = serviceEntity,
         };
     }
 
@@ -39,7 +41,8 @@ public class ProjectFactory(ICustomerService customerService, IProjectManagerSer
             EndDate = entity.EndDate,
             CustomerName = entity.Customer.CustomerName,
             CurrentStatus = entity.Status.StatusType,
-            ProjectManager = entity.ProjectManager.FirstName + " " + entity.ProjectManager.LastName,
+            ProjectManager = entity.Employee.FirstName + " " + entity.Employee.LastName,
+            ServiceName = entity.Service.ServiceName
         };
     }
 }

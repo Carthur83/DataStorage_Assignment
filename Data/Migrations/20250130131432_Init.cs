@@ -27,17 +27,16 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProjectManagers",
+                name: "Employees",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjectManagers", x => x.Id);
+                    table.PrimaryKey("PK_Employees", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,7 +78,7 @@ namespace Data.Migrations
                     EndDate = table.Column<DateTime>(type: "date", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
                     StatusId = table.Column<int>(type: "int", nullable: false),
-                    ProjectManagerId = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ServiceId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -92,9 +91,9 @@ namespace Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Projects_ProjectManagers_ProjectManagerId",
-                        column: x => x.ProjectManagerId,
-                        principalTable: "ProjectManagers",
+                        name: "FK_Projects_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -127,9 +126,9 @@ namespace Data.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_ProjectManagerId",
+                name: "IX_Projects_EmployeeId",
                 table: "Projects",
-                column: "ProjectManagerId");
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_ServiceId",
@@ -158,7 +157,7 @@ namespace Data.Migrations
                 name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "ProjectManagers");
+                name: "Employees");
 
             migrationBuilder.DropTable(
                 name: "Services");

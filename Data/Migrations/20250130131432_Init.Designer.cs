@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250129110353_Init")]
+    [Migration("20250130131432_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -42,6 +42,24 @@ namespace Data.Migrations
                     b.ToTable("Customers");
                 });
 
+            modelBuilder.Entity("Data.Entities.EmployeeEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Employees");
+                });
+
             modelBuilder.Entity("Data.Entities.ProjectEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -53,11 +71,12 @@ namespace Data.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("date");
-
-                    b.Property<int>("ProjectManagerId")
-                        .HasColumnType("int");
 
                     b.Property<string>("ProjectName")
                         .IsRequired()
@@ -76,34 +95,13 @@ namespace Data.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("ProjectManagerId");
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("ServiceId");
 
                     b.HasIndex("StatusId");
 
                     b.ToTable("Projects");
-                });
-
-            modelBuilder.Entity("Data.Entities.ProjectManagerEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProjectManagers");
                 });
 
             modelBuilder.Entity("Data.Entities.ServiceEntity", b =>
@@ -174,9 +172,9 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Entities.ProjectManagerEntity", "ProjectManager")
+                    b.HasOne("Data.Entities.EmployeeEntity", "Employee")
                         .WithMany()
-                        .HasForeignKey("ProjectManagerId")
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -194,7 +192,7 @@ namespace Data.Migrations
 
                     b.Navigation("Customer");
 
-                    b.Navigation("ProjectManager");
+                    b.Navigation("Employee");
 
                     b.Navigation("Service");
 

@@ -22,7 +22,7 @@ public partial class App : Application
         _host = Host.CreateDefaultBuilder()
             .ConfigureServices(servies =>
             {
-                servies.AddDbContext<DataContext>(x => x.UseSqlServer(@""));
+                servies.AddDbContext<DataContext>(x => x.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Projects\DataStorage_Assignment\Data\Database\Assignment_Db.mdf;Integrated Security=True;Connect Timeout=30"));
 
                 servies.AddScoped<IProjectRepository, ProjectRepository>();
                 servies.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -34,6 +34,7 @@ public partial class App : Application
                 servies.AddScoped<IProjectService, ProjectService>();
                 servies.AddScoped<IEmployeeService, EmployeeService>();
                 servies.AddScoped<IServiceService, ServiceService>();
+                servies.AddScoped<IStatusService, StatusService>();
                 
                 servies.AddScoped<IProjectFactory, ProjectFactory>();
 
@@ -42,6 +43,9 @@ public partial class App : Application
 
                 servies.AddTransient<ProjectAddViewModel>();
                 servies.AddTransient<ProjectAddView>();
+
+                servies.AddTransient<ProjectListViewModel>();
+                servies.AddTransient<ProjectListView>();
 
             })
             .Build();

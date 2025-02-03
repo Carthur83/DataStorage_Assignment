@@ -2,30 +2,31 @@
 using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
+using Data.Interfaces;
 
 namespace Business.Factories;
 
-public class ProjectFactory(ICustomerService customerService, IEmployeeService employeeService, IServiceService serviceService) : IProjectFactory
+public class ProjectFactory(ICustomerService customerService, IEmployeeService employeeService, IServiceService serviceService, IStatusService statusService) : IProjectFactory
 {
     private readonly ICustomerService _customerService = customerService;
     private readonly IEmployeeService _employeeService = employeeService;
     private readonly IServiceService _serviceService = serviceService;
-
-    public ProjectRegistrationForm Create() => new();
+    private readonly IStatusService _statusService = statusService;
 
     public async Task<ProjectEntity> Create(ProjectRegistrationForm form)
     {
         var customerEntity = await _customerService.CreateCustomerAsync(form.CustomerName);
         var employeeEntity = await _employeeService.CreateAsync(form.ProjectManager);
         var serviceEntity = await _serviceService.CreateCustomerAsync(form.ServiceName);
+        var statusEntity = await _statusService.GetStatusAsync(form.CurrentStatus);
 
         return new ProjectEntity
         {
-            ProjectName = form.ProjectName,
-            StartDate = form.StartDate,
-            EndDate = form.EndDate,
+            ProjectName = form.ProjectName.Trim().ToLower(),
+            StartDate = DateTime.Parse(form.StartDate),
+            EndDate = DateTime.Parse(form.EndDate),
             Customer = customerEntity,
-            StatusId = 1,
+            Status = statusEntity,
             Employee = employeeEntity,
             Service = serviceEntity,
         };

@@ -10,13 +10,17 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
         Background="Transparent"
-        Title="MainWindow" Height="600" Width="500">
+        Title="MainWindow" Height="800" Width="1100">
     <Grid>
 
         <ContentControl Content="{Binding CurrentViewModel}">
             <ContentControl.Resources>
                 <DataTemplate DataType="{x:Type viewmodels:ProjectAddViewModel}">
                     <views:ProjectAddView />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type viewmodels:ProjectListViewModel}">
+                    <views:ProjectListView />
                 </DataTemplate>
 
 

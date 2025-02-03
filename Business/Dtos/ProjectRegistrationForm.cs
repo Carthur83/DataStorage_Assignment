@@ -9,10 +9,10 @@ public class ProjectRegistrationForm
     public string ProjectName { get; set; } = null!;
 
     [Required]
-    public DateTime StartDate { get; set; }
+    public string StartDate { get; set; } = null!;
 
     [Required]
-    public DateTime EndDate { get; set; }
+    public string EndDate { get; set; } = null!;
 
     [Required]
     public string CustomerName { get; set; } = null!;

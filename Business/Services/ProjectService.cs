@@ -14,6 +14,9 @@ public class ProjectService(IProjectRepository repository, IProjectFactory facto
     private readonly IProjectFactory _projectFactory = factory;
     public async Task<bool> CreateProjectAsync(ProjectRegistrationForm form)
     {
+        if (form.ProjectName == null)
+            return false;
+
         try
         {
             var entity = await _projectRepository.GetAsync(x => x.ProjectName == form.ProjectName);

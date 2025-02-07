@@ -8,5 +8,6 @@ namespace Business.Interfaces
     {
         Project Create(ProjectEntity entity);
         Task<ProjectEntity> Create(ProjectRegistrationForm form);
+        Task<ProjectEntity> Create(Project updatedProject);
     }
 }

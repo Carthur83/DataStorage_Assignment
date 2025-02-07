@@ -1,15 +1,15 @@
-﻿<UserControl x:Class="Presentation_Wpf.Views.ProjectAddView"
+﻿<UserControl x:Class="Presentation_Wpf.Views.ProjectEditView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Presentation_Wpf.Views"
-             xmlns:viewmodel="clr-namespace:Presentation_Wpf.ViewModels"
-             d:DataContext="{d:DesignInstance Type=viewmodel:ProjectAddViewModel}"
+             xmlns:viewmodels="clr-namespace:Presentation_Wpf.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodels:ProjectEditViewModel}"
              mc:Ignorable="d" 
              Background="#e7e7e7"
              d:DesignHeight="800" d:DesignWidth="1100">
-    <Grid Margin="20">
+    <Grid Margin="25 20">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -20,26 +20,26 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" >
-            <TextBlock  Text="SKAPA NYTT PROJEKT" Style="{StaticResource Headline}"/>
+        <StackPanel Grid.Row="0" Margin="0 0 0 20">
+            <TextBlock  Text="DETALJER/REDIGERA PROJEKT" Style="{StaticResource Headline}"/>
             <Border Height="0.5" Margin="0 10 0 0"
 HorizontalAlignment="Stretch" Background="Gray"/>
         </StackPanel>
 
-        <Grid Grid.Row="1">
+
+        <StackPanel Grid.Row="1" >
+            <TextBlock Text="Projektnummer" FontSize="14"/>
+            <TextBox Text="{Binding Project.Id}" Padding="7" FontSize="14" Width="80" HorizontalAlignment="Left" IsReadOnly="True"/>
+        </StackPanel>
+
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Column="0" Grid.Row="0">
+            <Grid Grid.Column="0">
                 <Grid  Margin="0 30 90 0">
-                    
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
@@ -47,7 +47,7 @@ HorizontalAlignment="Stretch" Background="Gray"/>
 
                     <StackPanel Grid.Row="0">
                         <TextBlock Text="Namn/Beskrivning" FontSize="14"/>
-                        <TextBox Text="{Binding Form.ProjectName}" FontSize="14" Padding="7"/>
+                        <TextBox Text="{Binding Project.ProjectName}" FontSize="14" Padding="7"/>
                     </StackPanel>
 
                     <Grid Grid.Row="1" Margin="0 20 0 0">
@@ -59,18 +59,18 @@ HorizontalAlignment="Stretch" Background="Gray"/>
 
                         <StackPanel Grid.Column="0" Margin="0 0 10 0">
                             <TextBlock Text="Startdatum" FontSize="14"/>
-                            <DatePicker SelectedDate="{Binding Form.StartDate}" FontSize="19" />
+                            <TextBox Text="{Binding Project.StartDate, StringFormat={}{0:yyyy-MM-dd}}" Padding="7" FontSize="14" />
 
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" Margin="10 0 10 0">
                             <TextBlock Text="Slutdatum" FontSize="14"/>
-                            <DatePicker SelectedDate="{Binding Form.EndDate}" FontSize="19" />
+                            <TextBox Text="{Binding Project.EndDate, StringFormat={}{0:yyyy-MM-dd}}" Padding="7"  FontSize="14" />
                         </StackPanel>
 
                         <StackPanel Grid.Column="2" Margin="10 0 0 0">
                             <TextBlock Text="Status" FontSize="14"/>
-                            <ComboBox Text="{Binding Form.CurrentStatus}" FontSize="14" Padding="7" ItemsSource="{Binding Statuses}" SelectedItem="{Binding Form.CurrentStatus, Mode=TwoWay}" DisplayMemberPath="StatusType"/>
+                            <ComboBox Text="{Binding Project.StatusType}" FontSize="14" Padding="7" ItemsSource="{Binding Statuses}" SelectedItem="{Binding Project.StatusType, Mode=TwoWay}" DisplayMemberPath="StatusType" IsEditable="True" IsReadOnly="True"/>
                         </StackPanel>
                     </Grid>
                 </Grid>
@@ -80,24 +80,21 @@ HorizontalAlignment="Stretch" Background="Gray"/>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0">
+                <Grid  Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Tjänst" FontSize="14"/>
-                        
-                        <TextBox Text="{Binding Form.ServiceName}" FontSize="14" Padding="7" />
-                                               
+                        <TextBox Text="{Binding Project.ServiceName}" FontSize="14" Padding="7"/>
                     </StackPanel>
 
                 </Grid>
 
-                <Grid Grid.Row="1" Margin="0 20 0 0">
+                <Grid Grid.Row="2" Margin="0 20 0 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -105,33 +102,29 @@ HorizontalAlignment="Stretch" Background="Gray"/>
 
                     <StackPanel  Grid.Column="0"  Margin="0 0 10 0">
                         <TextBlock Text="Pris/h" FontSize="14"/>
-                        <TextBox Text="{Binding Form.Price}" FontSize="14" Padding="7"/>
+                        <TextBox Text="{Binding Project.Price}" FontSize="14" Padding="7"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1"  Margin="10 0 0 0">
                         <TextBlock Text="Total Kostnad" FontSize="14"/>
-                        <TextBox Text="{Binding Form.TotalPrice}" FontSize="14" Padding="7"/>
+                        <TextBox Text="{Binding Project.TotalPrice}" FontSize="14" Padding="7"/>
                     </StackPanel>
+
                 </Grid>
             </Grid>
-
-            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0 15 0 0">
-                <Button Command="{Binding GoToServiceViewCommand}" CommandParameter="{Binding Form}" Content="Visa/Hantera Tjänster" FontSize="14" Padding="7" Margin="0 0 15 0"/>
-                
-            </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="2" Margin="0 20 0 0">
+        <Grid Grid.Row="3" Margin="0 20 0 0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
-            <StackPanel  Grid.Row="0" Margin="0 20 0 20">
-                <TextBlock Text="Projektansvarig" Style="{StaticResource SubHead}" />
+            <StackPanel  Grid.Row="0" Margin="0 30 0 20">
+                <TextBlock Text="Projektansvarig" FontSize="16" FontWeight="Normal" />
                 <Border Height="0.5" Margin="0 10 0 0" Background="Gray"
-      HorizontalAlignment="Stretch"/>
+HorizontalAlignment="Stretch"/>
             </StackPanel>
 
             <Grid  Grid.Row="1">
@@ -142,7 +135,7 @@ HorizontalAlignment="Stretch" Background="Gray"/>
 
                 <StackPanel Grid.Column="0">
                     <TextBlock Text="Anställningsnummer" FontSize="14"/>
-                    <TextBox Text="{Binding Form.ProjectManager.Id}" FontSize="14" Padding="7"/>
+                    <TextBox Text="{Binding Project.EmployeeId}" FontSize="14" Padding="7"/>
                 </StackPanel>
 
             </Grid>
@@ -156,18 +149,18 @@ HorizontalAlignment="Stretch" Background="Gray"/>
 
                 <StackPanel  Grid.Column="0"  Margin="0 0 10 0">
                     <TextBlock Text="Förnamn" FontSize="14"/>
-                    <TextBox Text="{Binding Form.ProjectManager.FirstName}" FontSize="14" Padding="7"/>
+                    <TextBox Text="{Binding Project.EmployeeFirstName}" FontSize="14" Padding="7"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1"  Margin="10 0 0 0">
                     <TextBlock Text="Efternamn" FontSize="14"/>
-                    <TextBox Text="{Binding Form.ProjectManager.LastName}" FontSize="14" Padding="7"/>
+                    <TextBox Text="{Binding Project.EmployeeLastName}" FontSize="14" Padding="7"/>
                 </StackPanel>
 
             </Grid>
         </Grid>
-      
-        <Grid Grid.Row="3">
+
+        <Grid Grid.Row="4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -187,20 +180,28 @@ HorizontalAlignment="Stretch"/>
 
                 <StackPanel Margin="0 20 0 0">
                     <TextBlock Text="Namn" FontSize="14"/>
-                    <TextBox Text="{Binding Form.CustomerName}" Padding="7" FontSize="14" />
+                    <TextBox Text="{Binding Project.CustomerName}" Padding="7" FontSize="14" />
                 </StackPanel>
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="4" Margin="0 40 0 0">
+        <Grid Grid.Row="5" Margin="0 40 0 0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Command="{Binding GoToListViewCommand}" Grid.Column="0" Content="Avbryt" FontSize="14" Padding="7" Margin="20 0 10 0"/>
-            <Button Command="{Binding SaveCommand}" Grid.Column="1" Content="Spara" FontSize="14" Padding="7" Margin="10 0 20 0"/>
+            <StackPanel Grid.Column="0" HorizontalAlignment="Left" Orientation="Horizontal">
+                <Button Command="{Binding DeleteProjectCommand}" CommandParameter="{Binding Project}" Content="Radera Projekt" FontSize="14" Padding="7" Margin="10 0 20 0"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Command="{Binding GoToListViewCommand}" Content="Avbryt" FontSize="14" Padding="7" Margin="20 0 10 0"/>
+                <Button Command="{Binding SaveCommand}" CommandParameter="{Binding .}"  Content="Spara" FontSize="14" Padding="7" Margin="10 0 20 0"/>
+            </StackPanel>
 
         </Grid>
     </Grid>
+
 </UserControl>

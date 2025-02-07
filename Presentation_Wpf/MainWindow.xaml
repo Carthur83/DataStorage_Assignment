@@ -23,6 +23,14 @@
                     <views:ProjectListView />
                 </DataTemplate>
 
+                <DataTemplate DataType="{x:Type viewmodels:ProjectEditViewModel}">
+                    <views:ProjectEditView />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type viewmodels:ServiceListViewModel}">
+                    <views:ServiceListView />
+                </DataTemplate>
+
 
             </ContentControl.Resources>
         </ContentControl>

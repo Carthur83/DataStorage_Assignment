@@ -51,10 +51,11 @@ public class ProjectService(IProjectRepository repository, IProjectFactory facto
         return project;
     }
 
-    public async Task<Project> UpdateProjectAsync(Expression<Func<ProjectEntity, bool>> expression, ProjectEntity updatedProject)
+    public async Task<Project> UpdateProjectAsync(Expression<Func<ProjectEntity, bool>> expression, Project updatedProject)
     {
-        var entity = await _projectRepository.UpdateAsync(expression, updatedProject);
-        var project = _projectFactory.Create(updatedProject);
+        var updatedEntity = await _projectFactory.Create(updatedProject);
+        var entity = await _projectRepository.UpdateAsync(expression, updatedEntity);
+        var project =  _projectFactory.Create(updatedEntity);
 
         return project;
     }

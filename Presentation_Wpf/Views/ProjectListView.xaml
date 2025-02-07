@@ -4,40 +4,50 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Presentation_Wpf.Views"
+             xmlns:models="clr-namespace:Business.Models;assembly=Business"
              xmlns:viewmodel="clr-namespace:Presentation_Wpf.ViewModels"
              d:DataContext="{d:DesignInstance Type=viewmodel:ProjectListViewModel}"
              mc:Ignorable="d" 
-             Background="White"
-             d:DesignHeight="650" d:DesignWidth="500">
+             Background="#e7e7e7"
+             d:DesignHeight="650" d:DesignWidth="1100">
     <Grid Margin="20">
         <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="0 15">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="0*"/>
-                </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Margin="0 20 0 30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0*"/>
+            </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="1" Text="All Projects" FontSize="20" FontWeight="Medium" HorizontalAlignment="Center" />
-                
-            </Grid>
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="Alla Projekt" Padding="5 0 0 0" Style="{StaticResource Headline}" />
+                <Border Height="0.5" Margin="0 10 0 0" HorizontalAlignment="Stretch" Background="Gray"/>
+            </StackPanel>
+
+        </Grid>
+        
         <Grid Grid.Row="1">
-            <ListView ItemsSource="{Binding Projects}" Width="auto" Height="auto">
+            <ListView HorizontalAlignment="Center" Style="{StaticResource List}" ItemsSource="{Binding Projects}" SelectedItem="{Binding SelectedProject, Mode=TwoWay}" Width="1040" Height="500">
                 <ListView.View>
                     <GridView>
+                        <GridViewColumn Header="Projektnummer" DisplayMemberBinding="{Binding Id}" Width="200"/>
                         <GridViewColumn Header="Namn" DisplayMemberBinding="{Binding ProjectName}" Width="200"/>
-                        <GridViewColumn Header="Tidsperiod" DisplayMemberBinding="{Binding StartDate.Date}" Width="200"/>
-                        <GridViewColumn Header="Status" DisplayMemberBinding="{Binding CurrentStatus}" Width="200"/>
-
+                        <GridViewColumn Header="Start Datum" DisplayMemberBinding="{Binding StartDate, StringFormat={}{0:yyyy-MM-dd}}" Width="200"/>
+                        <GridViewColumn Header="Slut Datum" DisplayMemberBinding="{Binding EndDate, StringFormat={}{0:yyyy-MM-dd}}" Width="200"/>
+                        <GridViewColumn Header="Status" DisplayMemberBinding="{Binding StatusType}" Width="200"/>
                     </GridView>
                 </ListView.View>
             </ListView>
+
         </Grid>
-            
+        <StackPanel Grid.Row="2" Margin="60 40 60 20">
+            <Button Content="Lägg till nytt" Command="{Binding GoToAddViewCommand}"/>
+        </StackPanel>
 
     </Grid>
 </UserControl>

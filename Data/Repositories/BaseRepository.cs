@@ -34,7 +34,16 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
 
     public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
     {
-        return await _dbSet.ToListAsync();
+        try
+        {
+            return await _dbSet.ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error creating {nameof(TEntity)} entity :: {ex.Message}");
+            return null!;
+        }
+
     }
 
     public virtual async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> expression)
@@ -42,7 +51,15 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
         if (expression == null)
             return null!;
 
-        return await _dbSet.FirstOrDefaultAsync(expression) ?? null!;
+        try
+        {
+            return await _dbSet.FirstOrDefaultAsync(expression) ?? null!;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error creating {nameof(TEntity)} entity :: {ex.Message}");
+            return null!;
+        }
     }
 
     public virtual async Task<TEntity> UpdateAsync(Expression<Func<TEntity, bool>> expression, TEntity updatedEntity)
@@ -94,7 +111,16 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
 
     public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression)
     {
-        return await _dbSet.AnyAsync(expression);
+        try
+        {
+            return await _dbSet.AnyAsync(expression);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error deleting {nameof(TEntity)} entity :: {ex.Message}");
+            return false;
+        }
+
     }
 
 }

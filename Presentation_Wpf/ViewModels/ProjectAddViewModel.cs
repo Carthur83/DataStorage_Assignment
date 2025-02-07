@@ -13,22 +13,30 @@ public partial class ProjectAddViewModel : ObservableObject
     private readonly IServiceProvider _serviceProvider;
     private readonly IProjectService _projectService;
     private readonly IStatusService _statusService;
+    private readonly IServiceService _serviceService;
 
     [ObservableProperty]
     private ProjectRegistrationForm _form = new();
 
     [ObservableProperty]
-    private ObservableCollection<string> _statuses = ["Ej påbörjad", "Pågående", "Slutförd"];
+    private ObservableCollection<StatusEntity> _statuses = [];
 
-    public ProjectAddViewModel(IServiceProvider serviceProvider, IProjectService projectService, IStatusService statusService)
+    public ProjectAddViewModel(IServiceProvider serviceProvider, IProjectService projectService, IStatusService statusService, IServiceService serviceService)
     {
         _serviceProvider = serviceProvider;
         _projectService = projectService;
         _statusService = statusService;
+        _serviceService = serviceService;
+        InitializeAsync();
+    }
+
+    public async void InitializeAsync()
+    {
+       await GetStatuses();
     }
 
     [RelayCommand]
-    public async Task AddProject()
+    public async Task Save()
     {
         var result = await _projectService.CreateProjectAsync(Form);
         if (result)
@@ -36,12 +44,27 @@ public partial class ProjectAddViewModel : ObservableObject
             var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
             mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ProjectListViewModel>();
         }
-
     }
 
-    public void GetStatuses()
+    [RelayCommand]
+    public void GoToListView()
     {
-      //  Statuses = new ObservableCollection<StatusEntity>(await _statusService.GetAllStatusesAsync());
+        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+        mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ProjectListViewModel>();
     }
+
+    [RelayCommand]
+    public void GoToServiceView()
+    {
+        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+        mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ServiceListViewModel>();
+    }
+
+    public async Task GetStatuses()
+    {
+      Statuses = new ObservableCollection<StatusEntity>(await _statusService.GetAllStatusesAsync());
+    }
+
+   
 
 }

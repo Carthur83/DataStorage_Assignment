@@ -6,5 +6,7 @@ namespace Business.Interfaces
     {
         Task<StatusEntity> GetStatusAsync(string currentStatus);
         Task<IEnumerable<StatusEntity>> GetAllStatusesAsync();
+        Task<int> GetStatusIdAsync(string currentStatus);
+
     }
 }

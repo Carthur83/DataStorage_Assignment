@@ -24,4 +24,10 @@ public class ProjectRegistrationForm
 
     [Required]
     public string ServiceName { get; set; } = null!;
+
+    [Required]
+    public decimal Price { get; set; }
+
+    [Required]
+    public decimal TotalPrice { get; set; }
 }

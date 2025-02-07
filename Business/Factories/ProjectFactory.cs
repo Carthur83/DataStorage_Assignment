@@ -17,14 +17,15 @@ public class ProjectFactory(ICustomerService customerService, IEmployeeService e
     {
         var customerEntity = await _customerService.CreateCustomerAsync(form.CustomerName);
         var employeeEntity = await _employeeService.CreateAsync(form.ProjectManager);
-        var serviceEntity = await _serviceService.CreateCustomerAsync(form.ServiceName);
+        var serviceEntity = await _serviceService.CreateServiceAsync(form.ServiceName, form.Price);
         var statusEntity = await _statusService.GetStatusAsync(form.CurrentStatus);
 
         return new ProjectEntity
         {
-            ProjectName = form.ProjectName.Trim().ToLower(),
+            ProjectName = form.ProjectName,
             StartDate = DateTime.Parse(form.StartDate),
             EndDate = DateTime.Parse(form.EndDate),
+            TotalPrice = form.TotalPrice,
             Customer = customerEntity,
             Status = statusEntity,
             Employee = employeeEntity,
@@ -40,10 +41,40 @@ public class ProjectFactory(ICustomerService customerService, IEmployeeService e
             ProjectName = entity.ProjectName,
             StartDate = entity.StartDate,
             EndDate = entity.EndDate,
+            TotalPrice = entity.TotalPrice,
+            CustomerId = entity.CustomerId,
             CustomerName = entity.Customer.CustomerName,
-            CurrentStatus = entity.Status.StatusType,
+            StatusId = entity.StatusId,
+            StatusType = entity.Status.StatusType,
+            EmployeeId = entity.EmployeeId,
+            EmployeeFirstName = entity.Employee.FirstName,
+            EmployeeLastName = entity.Employee.LastName,
             ProjectManager = entity.Employee.FirstName + " " + entity.Employee.LastName,
-            ServiceName = entity.Service.ServiceName
+            ServiceId = entity.ServiceId,
+            ServiceName = entity.Service.ServiceName,
+            Price = entity.Service.Price,
+        };
+    }
+
+    public async Task<ProjectEntity> Create(Project project)
+    {
+        var serviceEntity = await _serviceService.CreateServiceAsync(project.ServiceName, project.Price);
+
+        return new ProjectEntity
+        {
+            Id = project.Id,
+            ProjectName = project.ProjectName,
+            StartDate = project.StartDate,
+            EndDate = project.EndDate,
+            CustomerId = project.CustomerId,
+            StatusId= project.StatusId,
+            EmployeeId= project.EmployeeId,
+            ServiceId= serviceEntity.Id,
+            TotalPrice = project.TotalPrice,
+            Customer = new CustomerEntity { Id = project.CustomerId, CustomerName = project.CustomerName },
+            Status = new StatusEntity { Id = project.StatusId, StatusType = project.StatusType },
+            Employee = new EmployeeEntity { Id = project.EmployeeId, FirstName = project.EmployeeFirstName, LastName = project.EmployeeLastName },
+            Service = serviceEntity
         };
     }
 }

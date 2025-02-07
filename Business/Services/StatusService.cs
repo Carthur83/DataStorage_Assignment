@@ -26,4 +26,13 @@ public class StatusService(IStatusRepository statusRepository) : IStatusService
 
         return statuses;
     }
+
+    public async Task<int> GetStatusIdAsync(string currentStatus)
+    {
+        if (currentStatus == null)
+            return 1;
+
+        var statusEntity = await _statusRepository.GetAsync(x => x.StatusType == currentStatus);
+        return statusEntity.Id;
+    }
 }

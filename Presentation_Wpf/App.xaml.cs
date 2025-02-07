@@ -47,6 +47,12 @@ public partial class App : Application
                 servies.AddTransient<ProjectListViewModel>();
                 servies.AddTransient<ProjectListView>();
 
+                servies.AddTransient<ProjectEditViewModel>();
+                servies.AddTransient<ProjectEditView>();
+
+                servies.AddTransient<ServiceListViewModel>();
+                servies.AddTransient<ServiceListView>();
+
             })
             .Build();
     }

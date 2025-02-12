@@ -4,6 +4,7 @@ using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
 using Data.Interfaces;
+using Data.Repositories;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
@@ -25,7 +26,7 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
 
         if (customer == null)
         {
-            var result = await _customerService.CreateCustomerAsync(form.Customer.CustomerName);
+            var result = await _customerService.CreateCustomerAsync(form.Customer);
             if (result)
                 customer = await _customerService.GetCustomerAsync(x => x.CustomerName == form.Customer.CustomerName);
         }
@@ -44,6 +45,8 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
                 service = await _serviceService.GetServiceAsync(x => x.ServiceName == form.Service.ServiceName);
         }
 
+        await _projectRepository.BeginTransactionAsync();
+
         try
         {
             var projectEntity = ProjectFactory.Create(form);
@@ -53,6 +56,9 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
             projectEntity.EmployeeId = employee!.Id;
 
             await _projectRepository.CreateAsync(projectEntity);
+            await _projectRepository.SaveAsync();
+
+            await _projectRepository.CommitTransactionAsync();
 
             return true;
 
@@ -60,6 +66,7 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
+            await _projectRepository.RollbackTransactionAsync();
             return false;
         }
     }
@@ -74,6 +81,9 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
     public async Task<Project> GetProjectAsync(Expression<Func<ProjectEntity, bool>> expression)
     {
         var entity = await _projectRepository.GetAsync(expression);
+        if (entity == null)
+            return null!;
+
         var project = ProjectFactory.Create(entity);
 
         return project;
@@ -81,17 +91,48 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
 
     public async Task<Project> UpdateProjectAsync(Expression<Func<ProjectEntity, bool>> expression, Project updatedProject)
     {
-        var updatedEntity = ProjectFactory.Create(updatedProject);
-        var entity = await _projectRepository.UpdateAsync(expression, updatedEntity);
-        var project = ProjectFactory.Create(updatedEntity);
+        if (updatedProject == null)
+            return null!;
 
-        return project;
+        try
+        {
+            var existingEntity = await _projectRepository.GetAsync(expression);
+            if (existingEntity == null)
+                return null!;
+
+            var updatedEntity = ProjectFactory.Create(updatedProject);
+
+            _projectRepository.Update(existingEntity, updatedEntity);
+            await _projectRepository.SaveAsync();
+
+            var project = ProjectFactory.Create(existingEntity);
+            return project;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            return null!;
+        }
+
     }
 
     public async Task<bool> DeleteProjectAsync(Expression<Func<ProjectEntity, bool>> expression)
     {
-        var result = await _projectRepository.DeleteAsync(expression);
-        return result;
+        if (expression == null)
+            return false;
+
+        try
+        {
+            var entity = await _projectRepository.GetAsync(expression);
+            _projectRepository.Delete(entity!);
+            await _projectRepository.SaveAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            return false;
+        }
     }
 
     public async Task<bool> CheckIfExistsAsync(Expression<Func<ProjectEntity, bool>> expression)

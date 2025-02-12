@@ -20,14 +20,20 @@ public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployee
         if (exists)
             return false;
 
+        await _employeeRepository.BeginTransactionAsync();
+
         try
         {
             await _employeeRepository.CreateAsync(EmployeeFactory.CreateEntity(form));
+            await _employeeRepository.SaveAsync();
+
+            await _employeeRepository.CommitTransactionAsync();
             return true;
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
+            await _employeeRepository.RollbackTransactionAsync();
             return false;
         }
     }
@@ -51,17 +57,48 @@ public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployee
 
     public async Task<Employee> UpdateEmployeeAsync(Expression<Func<EmployeeEntity, bool>> expression, Employee updatedEmployee)
     {
-        var updatedEntity = EmployeeFactory.CreateEntity(updatedEmployee);
-        var entity = await _employeeRepository.UpdateAsync(expression, updatedEntity);
-        var employee = EmployeeFactory.Create(updatedEntity);
+        if (updatedEmployee == null)
+            return null!;
 
-        return employee;
+        try
+        {
+            var existingEntity = await _employeeRepository.GetAsync(expression);
+            if (existingEntity == null)
+                return null!;
+
+            var updatedEntity = EmployeeFactory.CreateEntity(updatedEmployee);
+
+            _employeeRepository.Update(existingEntity, updatedEntity);
+            await _employeeRepository.SaveAsync();
+
+            return EmployeeFactory.Create(existingEntity);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            return null!;
+        }
+
     }
 
     public async Task<bool> DeleteEmployeeAsync(Expression<Func<EmployeeEntity, bool>> expression)
     {
-        var result = await _employeeRepository.DeleteAsync(expression);
-        return result;
+        if (expression == null)
+            return false;
+
+        try
+        {
+            var entity = await _employeeRepository.GetAsync(expression);
+            _employeeRepository.Delete(entity!);
+            await _employeeRepository.SaveAsync();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            return false;
+        }
     }
 
     public async Task<bool> CheckIfExistsAsync(Expression<Func<EmployeeEntity, bool>> expression)

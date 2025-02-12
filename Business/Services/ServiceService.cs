@@ -19,15 +19,21 @@ public class ServiceService(IServiceRepository serviceRepository) : IServiceServ
 
         if (exists)
             return false;
+
+        await _serviceRepository.BeginTransactionAsync();
            
         try
         {
             await _serviceRepository.CreateAsync(ServiceFactory.CreateEntity(form));
+            await _serviceRepository.SaveAsync();
+
+            await _serviceRepository.CommitTransactionAsync();
             return true;
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
+            await _serviceRepository.RollbackTransactionAsync();
             return false;
         }
     }
@@ -51,17 +57,47 @@ public class ServiceService(IServiceRepository serviceRepository) : IServiceServ
 
     public async Task<Service> UpdateServiceAsync(Expression<Func<ServiceEntity, bool>> expression, Service updatedService)
     {
-        var updatedEntity = ServiceFactory.CreateEntity(updatedService);
-        var entity = await _serviceRepository.UpdateAsync(expression, updatedEntity);
-        var project = ServiceFactory.Create(entity);
+        if (updatedService == null)
+            return null!;
 
-        return project;
+        try
+        {
+            var existingEntity = await _serviceRepository.GetAsync(expression);
+            if (existingEntity == null)
+                return null!;
+
+            var updatedEntity = ServiceFactory.CreateEntity(updatedService);
+
+            _serviceRepository.Update(existingEntity, updatedEntity);
+            await _serviceRepository.SaveAsync();
+
+            return ServiceFactory.Create(existingEntity);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            return null!;
+        }
     }
 
     public async Task<bool> DeleteServiceAsync(Expression<Func<ServiceEntity, bool>> expression)
     {
-        var result = await _serviceRepository.DeleteAsync(expression);
-        return result;
+        if (expression == null)
+            return false;
+
+        try
+        {
+            var entity = await _serviceRepository.GetAsync(expression);
+            _serviceRepository.Delete(entity!);
+            await _serviceRepository.SaveAsync();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            return false;
+        }
     }
 
     public async Task<bool> CheckIfExistsAsync(Expression<Func<ServiceEntity, bool>> expression)

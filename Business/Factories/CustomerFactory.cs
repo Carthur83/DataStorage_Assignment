@@ -6,7 +6,15 @@ namespace Business.Factories;
 
 public static class CustomerFactory
 {
-    public static Customer CreateEntity(CustomerEntity entity)
+    public static CustomerEntity CreateEntity(CustomerRegistrationForm form)
+    {
+        return new CustomerEntity
+        {
+            Id = form.Id,
+            CustomerName = form.CustomerName,
+        };
+    }
+    public static Customer Create(CustomerEntity entity)
     {
         return new Customer
         {

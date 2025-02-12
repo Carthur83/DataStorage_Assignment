@@ -47,7 +47,7 @@ public partial class CustomerListViewModel : ObservableObject
     [RelayCommand]
     public async Task AddCustomer(CustomerRegistrationForm form)
     {
-        var result = await _customerService.CreateCustomerAsync(form.CustomerName);
+        var result = await _customerService.CreateCustomerAsync(form);
         CustomerForm = new();
         GetCustomers();
     }

@@ -17,7 +17,7 @@ public class StatusService(IStatusRepository statusRepository) : IStatusService
             return null!;
 
         var statusEntity = await _statusRepository.GetAsync(x => x.StatusType == currentStatus);
-        return statusEntity;
+        return statusEntity!;
     }
 
     public async Task<IEnumerable<StatusEntity>> GetAllStatusesAsync()
@@ -33,6 +33,6 @@ public class StatusService(IStatusRepository statusRepository) : IStatusService
             return 1;
 
         var statusEntity = await _statusRepository.GetAsync(x => x.StatusType == currentStatus);
-        return statusEntity.Id;
+        return statusEntity!.Id;
     }
 }

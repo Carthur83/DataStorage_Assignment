@@ -14,24 +14,26 @@ public class CustomerService(ICustomerRepository customerRepository) : ICustomer
 {
     private readonly ICustomerRepository _customerRepository = customerRepository;
 
-    public async Task<bool> CreateCustomerAsync(string customerName)
+    public async Task<bool> CreateCustomerAsync(CustomerRegistrationForm form)
     {
-        var exists = await _customerRepository.ExistsAsync(x => x.CustomerName == customerName);
+        var exists = await _customerRepository.ExistsAsync(x => x.CustomerName == form.CustomerName);
         if (exists)
             return false;
+
+        await _customerRepository.BeginTransactionAsync();
+
         try
         {
-            var customerEntity = new CustomerEntity
-            {
-                CustomerName = customerName,
-            };
+            await _customerRepository.CreateAsync(CustomerFactory.CreateEntity(form));
+            await _customerRepository.SaveAsync();
 
-            await _customerRepository.CreateAsync(customerEntity);
+            await _customerRepository.CommitTransactionAsync();
             return true;
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
+            await _customerRepository.RollbackTransactionAsync();
             return false;
         }
     }
@@ -39,7 +41,7 @@ public class CustomerService(ICustomerRepository customerRepository) : ICustomer
     public async Task<IEnumerable<Customer>> GetAllCustomersAsync()
     {
         var entities = await _customerRepository.GetAllAsync();
-        var customers = entities.Select(CustomerFactory.CreateEntity);
+        var customers = entities.Select(CustomerFactory.Create);
         return customers;
     }
 
@@ -49,21 +51,54 @@ public class CustomerService(ICustomerRepository customerRepository) : ICustomer
         if (entity == null)
             return null!;
 
-        var customer = CustomerFactory.CreateEntity(entity);
+        var customer = CustomerFactory.Create(entity);
         return customer;
     }
 
     public async Task<Customer> UpdateCustomerAsync(Expression<Func<CustomerEntity, bool>> expression, Customer updatedCustomer)
     {
-        var updatedEntity = CustomerFactory.Create(updatedCustomer);
-        var entity =  await _customerRepository.UpdateAsync(expression, updatedEntity);
-        return CustomerFactory.CreateEntity(entity);
+        if (updatedCustomer == null)
+            return null!;
+
+        try
+        {
+            var existingEntity = await _customerRepository.GetAsync(expression);
+            if (existingEntity == null)
+                return null!;
+
+            var updatedEntity = CustomerFactory.Create(updatedCustomer);
+
+            _customerRepository.Update(existingEntity, updatedEntity);
+            await _customerRepository.SaveAsync();
+
+            return CustomerFactory.Create(existingEntity);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            return null!;
+        }
+
     }
 
     public async Task<bool> DeleteCustomerAsync(Expression<Func<CustomerEntity, bool>> expression)
     {
-        var result = await _customerRepository.DeleteAsync(expression);
-        return result;
+        if (expression == null)
+            return false;
+
+        try
+        {
+            var entity = await _customerRepository.GetAsync(expression);
+            _customerRepository.Delete(entity!);
+            await _customerRepository.SaveAsync();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            return false;
+        }
     }
 
     public async Task<bool> CheckIfExistsAsync(Expression<Func<CustomerEntity, bool>> expression)

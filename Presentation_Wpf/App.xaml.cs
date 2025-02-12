@@ -36,23 +36,30 @@ public partial class App : Application
                 servies.AddScoped<IServiceService, ServiceService>();
                 servies.AddScoped<IStatusService, StatusService>();
                 
-                servies.AddScoped<IProjectFactory, ProjectFactory>();
-
                 servies.AddSingleton<MainViewModel>();
                 servies.AddSingleton<MainWindow>();
 
                 servies.AddTransient<ProjectAddViewModel>();
                 servies.AddTransient<ProjectAddView>();
-
                 servies.AddTransient<ProjectListViewModel>();
                 servies.AddTransient<ProjectListView>();
-
                 servies.AddTransient<ProjectEditViewModel>();
                 servies.AddTransient<ProjectEditView>();
 
                 servies.AddTransient<ServiceListViewModel>();
                 servies.AddTransient<ServiceListView>();
+                servies.AddTransient<ServiceEditViewModel>();
+                servies.AddTransient<ServiceEditView>();
 
+                servies.AddTransient<EmployeeListViewModel>();
+                servies.AddTransient<EmployeeListView>();
+                servies.AddTransient<EmployeeEditViewModel>();
+                servies.AddTransient<EmployeeEditView>();
+
+                servies.AddTransient<CustomerListViewModel>();
+                servies.AddTransient<CustomerListView>();
+                servies.AddTransient<CustomerEditViewModel>();
+                servies.AddTransient<CustomerEditView>();
             })
             .Build();
     }

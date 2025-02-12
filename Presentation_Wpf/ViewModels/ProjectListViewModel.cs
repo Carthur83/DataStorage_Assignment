@@ -16,7 +16,7 @@ public partial class ProjectListViewModel : ObservableObject
     private ObservableCollection<Project> _projects = [];
 
     [ObservableProperty]
-    private Project _selectedProject;
+    private Project _selectedProject = new();
 
     public ProjectListViewModel(IServiceProvider serviceProvider, IProjectService projectService)
     {
@@ -28,7 +28,7 @@ public partial class ProjectListViewModel : ObservableObject
     // metoden är från chatgpt
     // den anropas när man klickar på en rad i listview och i sin tur
     // anropar den GoToEditView och skickar med radens objekt
-    partial void OnSelectedProjectChanged(Project? value)
+    partial void OnSelectedProjectChanged(Project value)
     {
         if (value != null)
         {

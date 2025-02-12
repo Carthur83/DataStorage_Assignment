@@ -39,7 +39,7 @@ HorizontalAlignment="Stretch" Background="Gray"/>
 
             <Grid Grid.Column="0" Grid.Row="0">
                 <Grid  Margin="0 30 90 0">
-                    
+
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
@@ -80,7 +80,6 @@ HorizontalAlignment="Stretch" Background="Gray"/>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0">
@@ -90,9 +89,9 @@ HorizontalAlignment="Stretch" Background="Gray"/>
 
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Tjänst" FontSize="14"/>
-                        
-                        <TextBox Text="{Binding Form.ServiceName}" FontSize="14" Padding="7" />
-                                               
+
+                        <TextBox Text="{Binding Form.Service.ServiceName}" FontSize="14" Padding="7" />
+
                     </StackPanel>
 
                 </Grid>
@@ -104,20 +103,22 @@ HorizontalAlignment="Stretch" Background="Gray"/>
                     </Grid.ColumnDefinitions>
 
                     <StackPanel  Grid.Column="0"  Margin="0 0 10 0">
-                        <TextBlock Text="Pris/h" FontSize="14"/>
-                        <TextBox Text="{Binding Form.Price}" FontSize="14" Padding="7"/>
+                        <TextBlock Text="Pris/tim" FontSize="14"/>
+                        <TextBox Text="{Binding Form.Service.Price}" FontSize="14" Padding="7"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="1"  Margin="10 0 0 0">
-                        <TextBlock Text="Total Kostnad" FontSize="14"/>
-                        <TextBox Text="{Binding Form.TotalPrice}" FontSize="14" Padding="7"/>
-                    </StackPanel>
+                    
                 </Grid>
             </Grid>
+            
+            <StackPanel Grid.Row="1" Grid.Column="0" Margin="0 15 0 0">
+                <TextBlock Text="Total Kostnad" FontSize="14"/>
+                <TextBox Text="{Binding Form.TotalPrice}" FontSize="14" Padding="7" Margin="0 0 450 0"/>
+            </StackPanel>
 
-            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0 15 0 0">
-                <Button Command="{Binding GoToServiceViewCommand}" CommandParameter="{Binding Form}" Content="Visa/Hantera Tjänster" FontSize="14" Padding="7" Margin="0 0 15 0"/>
-                
+            <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                <Button Command="{Binding GoToServiceListViewCommand}"  CommandParameter="{Binding Form}" Content="Välj/Hantera Tjänster" FontSize="14" Padding="7" 
+                        />
             </StackPanel>
         </Grid>
 
@@ -136,13 +137,17 @@ HorizontalAlignment="Stretch" Background="Gray"/>
 
             <Grid  Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="135"/>
+                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0">
                     <TextBlock Text="Anställningsnummer" FontSize="14"/>
                     <TextBox Text="{Binding Form.ProjectManager.Id}" FontSize="14" Padding="7"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
+                    <Button Content="Välj/Hantera Anställda" FontSize="14" Padding="7" Margin="70 0 0 0" Command="{Binding GoToEmployeeListViewCommand}"/>
                 </StackPanel>
 
             </Grid>
@@ -166,7 +171,7 @@ HorizontalAlignment="Stretch" Background="Gray"/>
 
             </Grid>
         </Grid>
-      
+
         <Grid Grid.Row="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
@@ -182,12 +187,17 @@ HorizontalAlignment="Stretch"/>
             <Grid  Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Margin="0 20 0 0">
                     <TextBlock Text="Namn" FontSize="14"/>
-                    <TextBox Text="{Binding Form.CustomerName}" Padding="7" FontSize="14" />
+                    <TextBox Text="{Binding Form.Customer.CustomerName}" Padding="7" FontSize="14" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
+                    <Button Content="Välj/Hantera kunder" FontSize="14" Padding="7" Margin="50 0 0 0" Command="{Binding GoToCustomerListViewCommand}"/>
                 </StackPanel>
             </Grid>
         </Grid>

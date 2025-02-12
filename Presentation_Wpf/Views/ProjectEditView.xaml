@@ -26,7 +26,6 @@
 HorizontalAlignment="Stretch" Background="Gray"/>
         </StackPanel>
 
-
         <StackPanel Grid.Row="1" >
             <TextBlock Text="Projektnummer" FontSize="14"/>
             <TextBox Text="{Binding Project.Id}" Padding="7" FontSize="14" Width="80" HorizontalAlignment="Left" IsReadOnly="True"/>
@@ -37,6 +36,11 @@ HorizontalAlignment="Stretch" Background="Gray"/>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
             <Grid Grid.Column="0">
                 <Grid  Margin="0 30 90 0">
@@ -80,6 +84,7 @@ HorizontalAlignment="Stretch" Background="Gray"/>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
                 <Grid  Grid.Row="0">
@@ -109,9 +114,13 @@ HorizontalAlignment="Stretch" Background="Gray"/>
                         <TextBlock Text="Total Kostnad" FontSize="14"/>
                         <TextBox Text="{Binding Project.TotalPrice}" FontSize="14" Padding="7"/>
                     </StackPanel>
-
                 </Grid>
             </Grid>
+
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0 15 0 0">
+                <Button Command="{Binding GoToServiceEditViewCommand}"  CommandParameter="{Binding Project}" Content="Välj/Hantera Tjänster" FontSize="14" Padding="7" Margin="0 0 15 0"
+            />
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Row="3" Margin="0 20 0 0">
@@ -129,13 +138,17 @@ HorizontalAlignment="Stretch"/>
 
             <Grid  Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="135"/>
+                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0">
                     <TextBlock Text="Anställningsnummer" FontSize="14"/>
                     <TextBox Text="{Binding Project.EmployeeId}" FontSize="14" Padding="7"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
+                    <Button Content="Välj/Hantera Anställda" FontSize="14" Padding="7" Margin="70 0 0 0" Command="{Binding GoToEmployeeEditViewCommand}" CommandParameter="{Binding Project}"/>
                 </StackPanel>
 
             </Grid>
@@ -175,12 +188,17 @@ HorizontalAlignment="Stretch"/>
             <Grid  Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Margin="0 20 0 0">
                     <TextBlock Text="Namn" FontSize="14"/>
                     <TextBox Text="{Binding Project.CustomerName}" Padding="7" FontSize="14" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
+                    <Button Content="Välj/Hantera kunder" FontSize="14" Padding="7" Margin="50 0 0 0" Command="{Binding GoToCustomerEditViewCommand}" CommandParameter="{Binding Project}"/>
                 </StackPanel>
             </Grid>
         </Grid>
@@ -198,7 +216,7 @@ HorizontalAlignment="Stretch"/>
 
             <StackPanel Grid.Column="2" HorizontalAlignment="Right" Orientation="Horizontal">
                 <Button Command="{Binding GoToListViewCommand}" Content="Avbryt" FontSize="14" Padding="7" Margin="20 0 10 0"/>
-                <Button Command="{Binding SaveCommand}" CommandParameter="{Binding .}"  Content="Spara" FontSize="14" Padding="7" Margin="10 0 20 0"/>
+                <Button Command="{Binding SaveCommand}" CommandParameter="{Binding Project}"  Content="Spara" FontSize="14" Padding="7" Margin="10 0 20 0"/>
             </StackPanel>
 
         </Grid>

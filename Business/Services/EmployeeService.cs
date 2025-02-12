@@ -1,29 +1,71 @@
-﻿using Business.Interfaces;
+﻿using Business.Dtos;
+using Business.Factories;
+using Business.Interfaces;
+using Business.Models;
 using Data.Entities;
 using Data.Interfaces;
+using Data.Repositories;
+using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace Business.Services;
 
-public class EmployeeService(IEmployeeRepository repository) : IEmployeeService
+public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployeeService
 {
-    private readonly IEmployeeRepository _repository = repository;
+    private readonly IEmployeeRepository _employeeRepository = employeeRepository;
 
-    public async Task<EmployeeEntity> CreateAsync(EmployeeEntity entity)
+    public async Task<bool> CreateEmployeeAsync(EmployeeRegistrationForm form)
     {
-        var employeeEntity = await _repository.GetAsync(x => x.Id == entity.Id);
-        if (employeeEntity == null)
+        var exists = await _employeeRepository.ExistsAsync(x => x.Id == form.Id);
+        if (exists)
+            return false;
+
+        try
         {
-            employeeEntity = new EmployeeEntity
-            {
-                Id = entity.Id,
-                FirstName = entity.FirstName,
-                LastName = entity.LastName,
-            };
-
-            await _repository.CreateAsync(employeeEntity);
-
+            await _employeeRepository.CreateAsync(EmployeeFactory.CreateEntity(form));
+            return true;
         }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            return false;
+        }
+    }
 
-        return employeeEntity;
+    public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
+    {
+        var entities = await _employeeRepository.GetAllAsync();
+        var employees = entities.Select(EmployeeFactory.Create);
+        return employees;
+    }
+
+    public async Task<Employee> GetEmployeeAsync(Expression<Func<EmployeeEntity, bool>> expression)
+    {
+        var entity = await _employeeRepository.GetAsync(expression);
+        if (entity == null)
+            return null!;
+
+        var emplyee = EmployeeFactory.Create(entity);
+        return emplyee;
+    }
+
+    public async Task<Employee> UpdateEmployeeAsync(Expression<Func<EmployeeEntity, bool>> expression, Employee updatedEmployee)
+    {
+        var updatedEntity = EmployeeFactory.CreateEntity(updatedEmployee);
+        var entity = await _employeeRepository.UpdateAsync(expression, updatedEntity);
+        var employee = EmployeeFactory.Create(updatedEntity);
+
+        return employee;
+    }
+
+    public async Task<bool> DeleteEmployeeAsync(Expression<Func<EmployeeEntity, bool>> expression)
+    {
+        var result = await _employeeRepository.DeleteAsync(expression);
+        return result;
+    }
+
+    public async Task<bool> CheckIfExistsAsync(Expression<Func<EmployeeEntity, bool>> expression)
+    {
+        return await _employeeRepository.ExistsAsync(expression);
     }
 }

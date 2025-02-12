@@ -1,14 +1,14 @@
-﻿<UserControl x:Class="Presentation_Wpf.Views.ServiceListView"
+﻿<UserControl x:Class="Presentation_Wpf.Views.ServiceEditView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:viewmodel="clr-namespace:Presentation_Wpf.ViewModels"
-             xmlns:models="clr-namespace:Business.Models;assembly=Business"
-             d:DataContext="{d:DesignInstance Type=viewmodel:ServiceListViewModel}"
              xmlns:local="clr-namespace:Presentation_Wpf.Views"
-             mc:Ignorable="d" 
-             Background="#e7e7e7"
+             xmlns:models="clr-namespace:Business.Models;assembly=Business"
+             xmlns:viewmodel="clr-namespace:Presentation_Wpf.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodel:ServiceEditViewModel}"
+             mc:Ignorable="d"
+             Background="White"
              d:DesignHeight="650" d:DesignWidth="1100">
     <Grid Margin="15">
         <Grid.RowDefinitions>
@@ -59,7 +59,7 @@ HorizontalAlignment="Stretch" Background="Gray"/>
                                             Command="{Binding DataContext.AddToProjectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                                     <Button Style="{StaticResource UpdateButton}" CommandParameter="{Binding .}" 
         Command="{Binding DataContext.GoToUpdateCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
-                                    <Button Style="{StaticResource DeleteButton}" CommandParameter="{Binding .}"              Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                                    <Button Style="{StaticResource DeleteButton}" CommandParameter="{Binding .}" Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                                 </StackPanel>
 
                             </Grid>
@@ -87,7 +87,7 @@ HorizontalAlignment="Stretch" Background="Gray"/>
                 <StackPanel Grid.Row="2" Margin="0 20" Orientation="Horizontal">
                     <Button Content="Lägg till ny" Command="{Binding AddServiceCommand}" CommandParameter="{Binding ServiceForm}" Margin="0 0 20 0" Padding="7"/>
                     <Button Content="Uppdatera" Command="{Binding UpdateServiceCommand}" CommandParameter="{Binding ServiceForm}" Margin="0 0 20 0" Padding="7"/>
-                    <Button Content="Avbryt" Command="{Binding GoToProjectAddViewCommand}" Padding="7"/>
+                    <Button Content="Avbryt" Command="{Binding GoToProjectEditViewCommand}" CommandParameter="{Binding Project}" Padding="7"/>
 
                 </StackPanel>
             </Grid>

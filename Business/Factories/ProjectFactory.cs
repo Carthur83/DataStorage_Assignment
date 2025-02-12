@@ -6,34 +6,22 @@ using Data.Interfaces;
 
 namespace Business.Factories;
 
-public class ProjectFactory(ICustomerService customerService, IEmployeeService employeeService, IServiceService serviceService, IStatusService statusService) : IProjectFactory
+public static class ProjectFactory
 {
-    private readonly ICustomerService _customerService = customerService;
-    private readonly IEmployeeService _employeeService = employeeService;
-    private readonly IServiceService _serviceService = serviceService;
-    private readonly IStatusService _statusService = statusService;
 
-    public async Task<ProjectEntity> Create(ProjectRegistrationForm form)
+    public static ProjectEntity Create(ProjectRegistrationForm form)
     {
-        var customerEntity = await _customerService.CreateCustomerAsync(form.CustomerName);
-        var employeeEntity = await _employeeService.CreateAsync(form.ProjectManager);
-        var serviceEntity = await _serviceService.CreateServiceAsync(form.ServiceName, form.Price);
-        var statusEntity = await _statusService.GetStatusAsync(form.CurrentStatus);
 
         return new ProjectEntity
         {
             ProjectName = form.ProjectName,
             StartDate = DateTime.Parse(form.StartDate),
             EndDate = DateTime.Parse(form.EndDate),
-            TotalPrice = form.TotalPrice,
-            Customer = customerEntity,
-            Status = statusEntity,
-            Employee = employeeEntity,
-            Service = serviceEntity,
+            TotalPrice = form.TotalPrice,           
         };
     }
 
-    public Project Create(ProjectEntity entity)
+    public static Project Create(ProjectEntity entity)
     {
         return new Project
         {
@@ -56,9 +44,8 @@ public class ProjectFactory(ICustomerService customerService, IEmployeeService e
         };
     }
 
-    public async Task<ProjectEntity> Create(Project project)
+    public static ProjectEntity Create(Project project)
     {
-        var serviceEntity = await _serviceService.CreateServiceAsync(project.ServiceName, project.Price);
 
         return new ProjectEntity
         {
@@ -69,12 +56,12 @@ public class ProjectFactory(ICustomerService customerService, IEmployeeService e
             CustomerId = project.CustomerId,
             StatusId= project.StatusId,
             EmployeeId= project.EmployeeId,
-            ServiceId= serviceEntity.Id,
             TotalPrice = project.TotalPrice,
+            ServiceId = project.ServiceId,
+            Service = new ServiceEntity { Id = project.ServiceId, ServiceName = project.ServiceName, Price = project.Price},
             Customer = new CustomerEntity { Id = project.CustomerId, CustomerName = project.CustomerName },
             Status = new StatusEntity { Id = project.StatusId, StatusType = project.StatusType },
             Employee = new EmployeeEntity { Id = project.EmployeeId, FirstName = project.EmployeeFirstName, LastName = project.EmployeeLastName },
-            Service = serviceEntity
         };
     }
 }

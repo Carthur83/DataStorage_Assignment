@@ -14,20 +14,17 @@ public class ProjectRegistrationForm
     [Required]
     public string EndDate { get; set; } = null!;
 
-    [Required]
-    public string CustomerName { get; set; } = null!;
-
     public string CurrentStatus { get; set; } = null!;
 
     [Required]
-    public EmployeeEntity ProjectManager { get; set; } = new();
-
-    [Required]
-    public string ServiceName { get; set; } = null!;
-
-    [Required]
-    public decimal Price { get; set; }
-
-    [Required]
     public decimal TotalPrice { get; set; }
+
+    [Required]
+    public CustomerRegistrationForm Customer { get; set; } = new();
+
+    [Required]
+    public EmployeeRegistrationForm ProjectManager { get; set; } = new();
+
+    [Required]
+    public ServiceRegistrationForm Service { get; set; } = new();
 }

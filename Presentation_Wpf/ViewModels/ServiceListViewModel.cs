@@ -23,6 +23,9 @@ public partial class ServiceListViewModel : ObservableObject
     [ObservableProperty]
     private Service _service = new();
 
+    [ObservableProperty]
+    private ProjectRegistrationForm _projectForm = new();
+
     public ServiceListViewModel(IServiceProvider serviceProvider, IServiceService serviceService)
     {
         _serviceProvider = serviceProvider;
@@ -33,14 +36,17 @@ public partial class ServiceListViewModel : ObservableObject
     [RelayCommand]
     public void GoToProjectAddView()
     {
+        var projectAddViewModel = _serviceProvider.GetRequiredService<ProjectAddViewModel>();
+        projectAddViewModel.Form = ProjectForm;
+
         var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-        mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ProjectAddViewModel>();
+        mainViewModel.CurrentViewModel = projectAddViewModel;
     }
 
     [RelayCommand]
     public async Task AddService(ServiceRegistrationForm serviceForm)
     {
-        var result = await _serviceService.CreateServiceAsync(serviceForm.ServiceName, serviceForm.Price);
+        var result = await _serviceService.CreateServiceAsync(serviceForm);
         GetServices();
     }
 
@@ -58,10 +64,27 @@ public partial class ServiceListViewModel : ObservableObject
     public void AddToProject(Service service)
     {
         var projectAddViewModel = _serviceProvider.GetRequiredService<ProjectAddViewModel>();
-        projectAddViewModel.Form = ServiceFactory.Create(service);
+        projectAddViewModel.Form = ProjectForm;
+        projectAddViewModel.Form.Service.ServiceName = service.ServiceName;
+        projectAddViewModel.Form.Service.Price = service.Price;
 
         var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
         mainViewModel.CurrentViewModel = projectAddViewModel;
+    }
+
+    [RelayCommand]  
+    public async Task GoToUpdate(Service service)
+    {
+        var result = await _serviceService.GetServiceAsync(x => x.Id == service.Id);
+        ServiceForm = ServiceFactory.CreateServiceForm(result);
+    }
+
+    [RelayCommand]
+    public async Task UpdateService(ServiceRegistrationForm updatedService)
+    {
+        await _serviceService.UpdateServiceAsync(x => x.Id == updatedService.Id, ServiceFactory.Create(updatedService));
+        ServiceForm = new();
+        GetServices();
     }
 
     public async void GetServices()

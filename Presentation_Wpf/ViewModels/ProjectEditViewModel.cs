@@ -28,6 +28,7 @@ public partial class ProjectEditViewModel : ObservableObject
 
     [ObservableProperty]
     private ObservableCollection<StatusEntity> _statuses = [];
+
     [RelayCommand]
     public void GoToListView()
     {
@@ -36,11 +37,12 @@ public partial class ProjectEditViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public async Task Save()
+    public async Task Save(Project updatedProject)
     {
         Project.StatusId = await _statusService.GetStatusIdAsync(Project.StatusType);
+        
 
-        var result = await _projectService.UpdateProjectAsync(x => x.Id == Project.Id, Project);
+        var result = await _projectService.UpdateProjectAsync(x => x.Id == Project.Id, updatedProject);
 
         var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
         mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ProjectListViewModel>();
@@ -56,6 +58,36 @@ public partial class ProjectEditViewModel : ObservableObject
             var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
             mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ProjectListViewModel>();
         }
+    }
+
+    [RelayCommand]
+    public void GoToServiceEditView(Project project)
+    {
+        var serviceEditViewModel = _serviceProvider.GetRequiredService<ServiceEditViewModel>();
+        serviceEditViewModel.Project = project;
+
+        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+        mainViewModel.CurrentViewModel = serviceEditViewModel;
+    }
+
+    [RelayCommand]
+    public void GoToEmployeeEditView(Project project)
+    {
+        var employeeEditViewModel = _serviceProvider.GetRequiredService<EmployeeEditViewModel>();
+        employeeEditViewModel.Project = project;
+
+        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+        mainViewModel.CurrentViewModel = employeeEditViewModel;
+    }
+
+    [RelayCommand]
+    public void GoToCustomerEditView(Project project)
+    {
+        var customerEditViewModel = _serviceProvider.GetRequiredService<CustomerEditViewModel>();
+        customerEditViewModel.Project = project;
+
+        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+        mainViewModel.CurrentViewModel = customerEditViewModel;
     }
 
     public async void GetStatuses()

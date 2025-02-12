@@ -54,12 +54,34 @@ public partial class ProjectAddViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void GoToServiceView()
+    public void GoToServiceListView(ProjectRegistrationForm form)
     {
+        var serviceListViewModel = _serviceProvider.GetRequiredService<ServiceListViewModel>();
+        serviceListViewModel.ProjectForm = form;
+
         var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-        mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ServiceListViewModel>();
+        mainViewModel.CurrentViewModel = serviceListViewModel;
     }
 
+    [RelayCommand]
+    public void GoToEmployeeListView()
+    {
+        var employeeListViewModel = _serviceProvider.GetRequiredService<EmployeeListViewModel>();
+        employeeListViewModel.ProjectForm = Form;
+
+        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+        mainViewModel.CurrentViewModel = employeeListViewModel;
+    }
+
+    [RelayCommand]
+    public void GoToCustomerListView()
+    {
+        var customerListViewModel = _serviceProvider.GetRequiredService<CustomerListViewModel>();
+        customerListViewModel.ProjectForm = Form;
+
+        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+        mainViewModel.CurrentViewModel = customerListViewModel;
+    }
     public async Task GetStatuses()
     {
       Statuses = new ObservableCollection<StatusEntity>(await _statusService.GetAllStatusesAsync());

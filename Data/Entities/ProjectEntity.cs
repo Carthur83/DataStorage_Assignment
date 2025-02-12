@@ -8,7 +8,6 @@ public class ProjectEntity
     [Key]
     public int Id { get; set; }
 
-
     [Column(TypeName = "nvarchar(50)")]
     public string ProjectName { get; set; } = null!;
 

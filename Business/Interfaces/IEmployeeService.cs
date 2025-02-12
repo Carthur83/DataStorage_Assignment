@@ -1,9 +1,16 @@
-﻿using Data.Entities;
+﻿using Business.Dtos;
+using Business.Models;
+using Data.Entities;
+using System.Linq.Expressions;
 
-namespace Business.Interfaces
+namespace Business.Services;
+
+public interface IEmployeeService
 {
-    public interface IEmployeeService
-    {
-        Task<EmployeeEntity> CreateAsync(EmployeeEntity entity);
-    }
+    Task<bool> CreateEmployeeAsync(EmployeeRegistrationForm form);
+    Task<Employee> GetEmployeeAsync(Expression<Func<EmployeeEntity, bool>> expression);
+    Task<IEnumerable<Employee>> GetAllEmployeesAsync();
+    Task<Employee> UpdateEmployeeAsync(Expression<Func<EmployeeEntity, bool>> expression, Employee updatedEmployee);
+    Task<bool> DeleteEmployeeAsync(Expression<Func<EmployeeEntity, bool>> expression);
+    Task<bool> CheckIfExistsAsync(Expression<Func<EmployeeEntity, bool>> expression);
 }

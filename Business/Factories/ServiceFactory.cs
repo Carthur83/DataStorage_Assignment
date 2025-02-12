@@ -6,6 +6,15 @@ namespace Business.Factories;
 
 public static class ServiceFactory
 {
+    public static ServiceEntity CreateEntity(ServiceRegistrationForm form)
+    {
+        return new ServiceEntity
+        {
+            ServiceName = form.ServiceName,
+            Price = form.Price,
+        };
+
+    }
     public static Service Create(ServiceEntity entity)
     {
         return new Service()
@@ -16,10 +25,38 @@ public static class ServiceFactory
         };
     }
 
-    public static ProjectRegistrationForm Create(Service service)
+    public static ProjectRegistrationForm CreateProjectForm(Service service)
     {
         return new ProjectRegistrationForm()
         {
+            Service = new ServiceRegistrationForm { ServiceName = service.ServiceName, Price = service.Price },
+        };
+    }
+
+    public static ServiceRegistrationForm CreateServiceForm(Service service)
+    {
+        return new ServiceRegistrationForm
+        {
+            Id = service.Id,
+            ServiceName = service.ServiceName,
+            Price = service.Price,
+        };
+    }
+
+    public static Service Create(ServiceRegistrationForm form)
+    {
+        return new Service
+        {
+            Id = form.Id,
+            ServiceName = form.ServiceName,
+            Price = form.Price,
+        };
+    }
+    public static ServiceEntity CreateEntity(Service service)
+    {
+        return new ServiceEntity
+        {
+            Id = service.Id,
             ServiceName = service.ServiceName,
             Price = service.Price,
         };

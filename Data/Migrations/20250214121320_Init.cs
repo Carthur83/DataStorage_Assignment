@@ -30,7 +30,8 @@ namespace Data.Migrations
                 name: "Employees",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1001, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", nullable: false)
                 },
@@ -46,8 +47,7 @@ namespace Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ServiceName = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,9 +76,10 @@ namespace Data.Migrations
                     ProjectName = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     StartDate = table.Column<DateTime>(type: "date", nullable: false),
                     EndDate = table.Column<DateTime>(type: "date", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
                     StatusId = table.Column<int>(type: "int", nullable: false),
-                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
                     ServiceId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -101,7 +102,7 @@ namespace Data.Migrations
                         column: x => x.ServiceId,
                         principalTable: "Services",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Projects_Statuses_StatusId",
                         column: x => x.StatusId,

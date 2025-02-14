@@ -5,10 +5,9 @@ namespace Business.Models;
 public abstract class Result : IResult
 {
     public bool Success { get; protected set; }
-
     public int StatusCode { get; protected set; }
-
     public string? ErrorMessage { get; protected set; }
+    
 
     public static Result Ok()
     {

@@ -27,6 +27,9 @@ public partial class CustomerListViewModel : ObservableObject
     [ObservableProperty]
     private ProjectRegistrationForm _projectForm = new();
 
+    [ObservableProperty]
+    private string? _message;
+
     public CustomerListViewModel(IServiceProvider serviceProvider, ICustomerService customerService)
     {
         _serviceProvider = serviceProvider;
@@ -48,8 +51,11 @@ public partial class CustomerListViewModel : ObservableObject
     public async Task AddCustomer(CustomerRegistrationForm form)
     {
         var result = await _customerService.CreateCustomerAsync(form);
-        CustomerForm = new();
-        GetCustomers();
+        if (result.Success)
+        {           
+            GetCustomers();
+        }
+        Message = result.ErrorMessage!;
     }
 
     [RelayCommand]

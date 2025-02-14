@@ -33,6 +33,9 @@ public partial class CustomerEditViewModel : ObservableObject
     [ObservableProperty]
     private Project _project = new();
 
+    [ObservableProperty]
+    private string? _message;
+
     [RelayCommand]
     public void GoToProjectEditView(Project project)
     {
@@ -47,8 +50,11 @@ public partial class CustomerEditViewModel : ObservableObject
     public async Task AddCustomer(CustomerRegistrationForm form)
     {
         var result = await _customerService.CreateCustomerAsync(form);
-        CustomerForm = new();
-        GetCustomers();
+        if (result.Success)
+        {
+            GetCustomers();
+        }
+        Message = result.ErrorMessage!;
     }
 
     [RelayCommand]
@@ -83,7 +89,6 @@ public partial class CustomerEditViewModel : ObservableObject
     public async Task UpdateCustomer(CustomerRegistrationForm updatedCustomer)
     {
         await _customerService.UpdateCustomerAsync(x => x.Id == updatedCustomer.Id, CustomerFactory.Create(updatedCustomer));
-        CustomerForm = new();
         GetCustomers();
     }
 

@@ -28,7 +28,7 @@ public class ProjectEntity
     public int StatusId { get; set; }
     public StatusEntity Status { get; set; } = null!;
 
-    public string EmployeeId { get; set; } = null!;
+    public int EmployeeId { get; set; }
     public EmployeeEntity Employee { get; set; } = null!;
 
 

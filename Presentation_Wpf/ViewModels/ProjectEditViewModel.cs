@@ -41,7 +41,6 @@ public partial class ProjectEditViewModel : ObservableObject
     {
         Project.StatusId = await _statusService.GetStatusIdAsync(Project.StatusType);
         
-
         var result = await _projectService.UpdateProjectAsync(x => x.Id == Project.Id, updatedProject);
 
         var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
@@ -53,7 +52,7 @@ public partial class ProjectEditViewModel : ObservableObject
     {
         var result = await _projectService.DeleteProjectAsync(x => x.Id == project.Id);
 
-        if (result)
+        if (result.Success)
         {
             var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
             mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ProjectListViewModel>();

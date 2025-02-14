@@ -6,7 +6,7 @@ namespace Data.Entities;
 public class EmployeeEntity
 {
     [Key]
-    public string Id { get; set; } = null!;
+    public int Id { get; set; }
 
     [Column(TypeName = "nvarchar(50)")]
     public string FirstName { get; set; } = null!;

@@ -27,6 +27,9 @@ public partial class EmployeeEditViewModel : ObservableObject
     [ObservableProperty]
     private Project _project = new();
 
+    [ObservableProperty]
+    private string? _message;
+
     public EmployeeEditViewModel(IServiceProvider serviceProvider, IEmployeeService employeeService)
     {
         _serviceProvider = serviceProvider;

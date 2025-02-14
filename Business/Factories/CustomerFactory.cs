@@ -10,7 +10,6 @@ public static class CustomerFactory
     {
         return new CustomerEntity
         {
-            Id = form.Id,
             CustomerName = form.CustomerName,
         };
     }

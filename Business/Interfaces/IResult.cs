@@ -6,3 +6,6 @@ public interface IResult
     int StatusCode { get; }
     string? ErrorMessage { get; }
 }
+
+
+

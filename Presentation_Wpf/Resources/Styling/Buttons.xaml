@@ -14,7 +14,7 @@
     
     <!-- Update Button-->
     <Style x:Key="UpdateButton" TargetType="Button">
-        <Setter Property="Background" Value="#1d67a1"/>
+        <Setter Property="Background" Value="#3c54d4"/>
         <Setter Property="Margin" Value="0 4 4 4"/>
         <Setter Property="Padding" Value="4"/>
         <Setter Property="FontSize" Value="20"/>
@@ -26,7 +26,7 @@
     
     <!-- Delete Button-->
     <Style x:Key="DeleteButton" TargetType="Button">
-        <Setter Property="Background" Value="Red"/>
+        <Setter Property="Background" Value="#c22a2a"/>
         <Setter Property="Margin" Value="0 4 4 4"/>
         <Setter Property="Padding" Value="4"/>
         <Setter Property="FontSize" Value="20"/>
@@ -34,5 +34,248 @@
         <Setter Property="Content" Value="&#xE74D;"/>
         <Setter Property="Foreground" Value="LightGray"/>
         <Setter Property="BorderBrush" Value="#1d67a1"/>
+    </Style>
+
+    <!-- Exit Button -->
+    <Style x:Key="ExitButton" TargetType="Button">
+        <Setter Property="Content" Value="&#xE711;"/>
+        <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="LightGray"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="ButtonBorder">
+                        <TextBlock x:Name="ContentText"
+                       Text="{TemplateBinding Content}"
+                       Foreground="{TemplateBinding Foreground}"
+                       FontFamily="{TemplateBinding FontFamily}"
+                       FontWeight="{TemplateBinding FontWeight}"
+                       FontSize="{TemplateBinding FontSize}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ContentText" Property="Foreground" Value="#FFFFFF" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="ContentText" Property="Foreground" Value="CornflowerBlue" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+
+    <!--Standard Button-->
+    <Style x:Key="StandardButton" TargetType="Button">
+        <Setter Property="Padding" Value="15 9"/>
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Background" Value="Gray" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="ButtonBorder"
+                     Background="{TemplateBinding Background}"
+                     BorderBrush="{TemplateBinding Background}"
+                     Padding="{TemplateBinding Padding}"
+                     CornerRadius="20"                           
+                     >
+                        <TextBlock x:Name="ContentText"
+                            Text="{TemplateBinding Content}"
+                            FontSize="{TemplateBinding FontSize}"
+                            FontWeight="{TemplateBinding FontWeight}"
+                            Foreground="{TemplateBinding Foreground}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ButtonBorder" Property="Background" Value="#2985cf"/>
+                            <Setter TargetName="ContentText" Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="ButtonBorder" Property="Background" Value="#1d67a1"/>
+                            <Setter TargetName="ContentText" Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Save Button-->
+    <Style x:Key="SaveButton" TargetType="Button">
+        <Setter Property="Padding" Value="25 10"/>
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Background" Value="Green" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="ButtonBorder"
+                       Background="{TemplateBinding Background}"
+                       BorderBrush="{TemplateBinding Background}"
+                       Padding="{TemplateBinding Padding}"
+                       CornerRadius="20"                           
+                       >
+                        <TextBlock x:Name="ContentText"
+                              Text="{TemplateBinding Content}"
+                              FontSize="{TemplateBinding FontSize}"
+                              FontWeight="{TemplateBinding FontWeight}"
+                              Foreground="{TemplateBinding Foreground}"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ButtonBorder" Property="Background" Value="#2e9627"/>
+                            <Setter TargetName="ContentText" Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="ButtonBorder" Property="Background" Value="#297324"/>
+                            <Setter TargetName="ContentText" Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Cancel Button-->
+    <Style x:Key="CancelButton" TargetType="Button">
+        <Setter Property="Padding" Value="30 10"/>
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Background" Value="#83878a" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="CancelButtonBorder"
+                   Background="{TemplateBinding Background}"
+                   BorderBrush="{TemplateBinding Background}"
+                   Padding="{TemplateBinding Padding}"
+                   CornerRadius="20"                           
+                   >
+                        <TextBlock x:Name="CancelContentText"
+                          Text="{TemplateBinding Content}"
+                          FontSize="{TemplateBinding FontSize}"
+                          FontWeight="{TemplateBinding FontWeight}"
+                          Foreground="{TemplateBinding Foreground}"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="CancelButtonBorder" Property="Background" Value="#a5abb0"/>
+                            <Setter TargetName="CancelContentText" Property="Foreground" Value="white"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="CancelButtonBorder" Property="Background" Value="#83878a"/>
+                            <Setter TargetName="CancelContentText" Property="Foreground" Value="white"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Delete Button-->
+    <Style x:Key="SecondDeleteButton" TargetType="Button">
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Background" Value="#c22a2a" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="DeleteButtonBorder"
+               Background="{TemplateBinding Background}"
+               BorderBrush="{TemplateBinding Background}"
+               Padding="{TemplateBinding Padding}"
+               CornerRadius="20"                           
+               >
+                        <TextBlock x:Name="DeleteContentText"
+                      Text="{TemplateBinding Content}"
+                      FontSize="{TemplateBinding FontSize}"
+                      FontWeight="{TemplateBinding FontWeight}"
+                      Foreground="{TemplateBinding Foreground}"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="DeleteButtonBorder" Property="Background" Value="#de3030"/>
+                            <Setter TargetName="DeleteContentText" Property="Foreground" Value="white"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="DeleteButtonBorder" Property="Background" Value="#c22a2a"/>
+                            <Setter TargetName="DeleteContentText" Property="Foreground" Value="white"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Update2 Button-->
+    <Style x:Key="Update2Button" TargetType="Button">
+        <Setter Property="Padding" Value="15 8"/>
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Background" Value="#3c54d4" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="ButtonBorder"
+             Background="{TemplateBinding Background}"
+             BorderBrush="{TemplateBinding Background}"
+             Padding="{TemplateBinding Padding}"
+             CornerRadius="20"                           
+             >
+                        <TextBlock x:Name="ContentText"
+                    Text="{TemplateBinding Content}"
+                    FontSize="{TemplateBinding FontSize}"
+                    FontWeight="{TemplateBinding FontWeight}"
+                    Foreground="{TemplateBinding Foreground}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ButtonBorder" Property="Background" Value="#2985cf"/>
+                            <Setter TargetName="ContentText" Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="ButtonBorder" Property="Background" Value="#1d67a1"/>
+                            <Setter TargetName="ContentText" Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

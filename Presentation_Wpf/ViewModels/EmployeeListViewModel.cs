@@ -27,6 +27,9 @@ public partial class EmployeeListViewModel : ObservableObject
     [ObservableProperty]
     private Employee _employee = new();
 
+    [ObservableProperty]
+    private string? _message;
+
     public EmployeeListViewModel(IServiceProvider serviceProvider, IEmployeeService employeeService)
     {
         _serviceProvider = serviceProvider;
@@ -58,7 +61,6 @@ public partial class EmployeeListViewModel : ObservableObject
     {
         var result = await _employeeService.CreateEmployeeAsync(employeeForm);
         GetEmployees();
-        EmployeeForm = new();
     }
 
     [RelayCommand]

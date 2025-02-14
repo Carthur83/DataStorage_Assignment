@@ -21,6 +21,9 @@ public partial class ProjectAddViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<StatusEntity> _statuses = [];
 
+    [ObservableProperty]
+    private string _errorMessage = "";
+
     public ProjectAddViewModel(IServiceProvider serviceProvider, IProjectService projectService, IStatusService statusService, IServiceService serviceService)
     {
         _serviceProvider = serviceProvider;
@@ -32,17 +35,21 @@ public partial class ProjectAddViewModel : ObservableObject
 
     public async void InitializeAsync()
     {
-       await GetStatuses();
+        await GetStatuses();
     }
 
     [RelayCommand]
-    public async Task Save()
+    public async Task Save(ProjectRegistrationForm form)
     {
-        var result = await _projectService.CreateProjectAsync(Form);
-        if (result)
+        var result = await _projectService.CreateProjectAsync(form);
+        if (result.Success)
         {
             var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
             mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ProjectListViewModel>();
+        }
+        else
+        {
+            ErrorMessage = "Alla fält måste vara ifyllda!";
         }
     }
 
@@ -84,9 +91,9 @@ public partial class ProjectAddViewModel : ObservableObject
     }
     public async Task GetStatuses()
     {
-      Statuses = new ObservableCollection<StatusEntity>(await _statusService.GetAllStatusesAsync());
+        Statuses = new ObservableCollection<StatusEntity>(await _statusService.GetAllStatusesAsync());
     }
 
-   
+
 
 }

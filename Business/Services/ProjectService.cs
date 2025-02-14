@@ -5,6 +5,7 @@ using Business.Models;
 using Data.Entities;
 using Data.Interfaces;
 using Data.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
@@ -17,17 +18,20 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
     private readonly IEmployeeService _employeeService = employeeService;
     private readonly ICustomerService _customerService = customerService;
     private readonly IStatusService _statusService = statusService;
-    public async Task<bool> CreateProjectAsync(ProjectRegistrationForm form)
+    public async Task<IResult> CreateProjectAsync(ProjectRegistrationForm form)
     {
-        var service = await _serviceService.GetServiceAsync(x => x.ServiceName == form.Service.ServiceName);
-        var employee = await _employeeService.GetEmployeeAsync(x => x.Id == form.ProjectManager.Id);
+        if (form == null)
+            return Result.BadRequest("Ogiltigt registreringsformulär");
+
         var customer = await _customerService.GetCustomerAsync(x => x.CustomerName == form.Customer.CustomerName);
+        var employee = await _employeeService.GetEmployeeAsync(x => x.Id == form.ProjectManager.Id);
+        var service = await _serviceService.GetServiceAsync(x => x.ServiceName == form.Service.ServiceName);
         var status = await _statusService.GetStatusAsync(form.CurrentStatus);
 
         if (customer == null)
         {
             var result = await _customerService.CreateCustomerAsync(form.Customer);
-            if (result)
+            if (result.Success)
                 customer = await _customerService.GetCustomerAsync(x => x.CustomerName == form.Customer.CustomerName);
         }
 
@@ -43,7 +47,7 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
             var result = await _serviceService.CreateServiceAsync(form.Service);
             if (result)
                 service = await _serviceService.GetServiceAsync(x => x.ServiceName == form.Service.ServiceName);
-        }
+        } 
 
         await _projectRepository.BeginTransactionAsync();
 
@@ -60,14 +64,14 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
 
             await _projectRepository.CommitTransactionAsync();
 
-            return true;
+            return Result.Ok();
 
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             await _projectRepository.RollbackTransactionAsync();
-            return false;
+            return Result.Error("Nåt gick fel, projekt ej skapat");
         }
     }
 
@@ -78,7 +82,7 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
         return projects;
     }
 
-    public async Task<Project> GetProjectAsync(Expression<Func<ProjectEntity, bool>> expression)
+    public async Task<IResult> GetProjectAsync(Expression<Func<ProjectEntity, bool>> expression)
     {
         var entity = await _projectRepository.GetAsync(expression);
         if (entity == null)
@@ -86,10 +90,10 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
 
         var project = ProjectFactory.Create(entity);
 
-        return project;
+        return Result<Project>.Ok(project);
     }
 
-    public async Task<Project> UpdateProjectAsync(Expression<Func<ProjectEntity, bool>> expression, Project updatedProject)
+    public async Task<IResult> UpdateProjectAsync(Expression<Func<ProjectEntity, bool>> expression, Project updatedProject)
     {
         if (updatedProject == null)
             return null!;
@@ -98,7 +102,7 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
         {
             var existingEntity = await _projectRepository.GetAsync(expression);
             if (existingEntity == null)
-                return null!;
+                return Result.NotFound("Inget projekt hittades");
 
             var updatedEntity = ProjectFactory.Create(updatedProject);
 
@@ -106,37 +110,41 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
             await _projectRepository.SaveAsync();
 
             var project = ProjectFactory.Create(existingEntity);
-            return project;
+            return Result.Ok();
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
-            return null!;
+            return Result.Error("Nåt gick fel, projekt ej uppdaterat");
         }
 
     }
 
-    public async Task<bool> DeleteProjectAsync(Expression<Func<ProjectEntity, bool>> expression)
+    public async Task<IResult> DeleteProjectAsync(Expression<Func<ProjectEntity, bool>> expression)
     {
         if (expression == null)
-            return false;
+            return null!;
 
         try
         {
             var entity = await _projectRepository.GetAsync(expression);
+            if (entity == null)
+                return Result.NotFound("Inget projekt hittades");
+
             _projectRepository.Delete(entity!);
             await _projectRepository.SaveAsync();
-            return true;
+            return Result.Ok();
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
-            return false;
+            return Result.Error("Nåt gick fel, projekt ej raderat");
         }
     }
 
-    public async Task<bool> CheckIfExistsAsync(Expression<Func<ProjectEntity, bool>> expression)
+    public async Task<IResult> CheckIfExistsAsync(Expression<Func<ProjectEntity, bool>> expression)
     {
-        return await _projectRepository.ExistsAsync(expression);
+        var result = await _projectRepository.ExistsAsync(expression);
+        return result ? Result.Ok() : Result.NotFound("Inget projekt hittades");
     }
 }

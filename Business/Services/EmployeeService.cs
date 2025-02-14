@@ -16,6 +16,9 @@ public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployee
 
     public async Task<bool> CreateEmployeeAsync(EmployeeRegistrationForm form)
     {
+        if (string.IsNullOrEmpty(form.FirstName) || string.IsNullOrEmpty(form.LastName))
+            return false;
+
         var exists = await _employeeRepository.ExistsAsync(x => x.Id == form.Id);
         if (exists)
             return false;
@@ -51,8 +54,8 @@ public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployee
         if (entity == null)
             return null!;
 
-        var emplyee = EmployeeFactory.Create(entity);
-        return emplyee;
+        var employee = EmployeeFactory.Create(entity);
+        return employee;
     }
 
     public async Task<Employee> UpdateEmployeeAsync(Expression<Func<EmployeeEntity, bool>> expression, Employee updatedEmployee)

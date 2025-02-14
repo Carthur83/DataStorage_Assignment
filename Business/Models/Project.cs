@@ -12,7 +12,7 @@ public class Project
     public string CustomerName { get; set; } = null!;
     public int StatusId { get; set; }
     public string StatusType { get; set; } = null!;
-    public string EmployeeId { get; set; } = null!;
+    public int EmployeeId { get; set; }
     public string EmployeeFirstName { get; set; } = null!;
     public string EmployeeLastName { get; set; } = null!;
     public string ProjectManager { get; set; } = null!;

@@ -8,7 +8,7 @@
              d:DataContext="{d:DesignInstance Type=viewmodels:ProjectEditViewModel}"
              mc:Ignorable="d" 
              Background="#e7e7e7"
-             d:DesignHeight="650" d:DesignWidth="1100">
+             d:DesignHeight="750" d:DesignWidth="1100">
     <Grid Margin="25 20">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -20,7 +20,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Margin="0 0 0 20">
+        <StackPanel Grid.Row="0" Margin="0 0 0 0">
             <TextBlock  Text="DETALJER/REDIGERA PROJEKT" Style="{StaticResource Headline}"/>
             <Border Height="0.5" Margin="0 10 0 0"
 HorizontalAlignment="Stretch" Background="Gray"/>
@@ -43,7 +43,7 @@ HorizontalAlignment="Stretch" Background="Gray"/>
             </Grid.RowDefinitions>
 
             <Grid Grid.Column="0">
-                <Grid  Margin="0 30 90 0">
+                <Grid  Margin="0 20 90 0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
@@ -54,7 +54,7 @@ HorizontalAlignment="Stretch" Background="Gray"/>
                         <TextBox Text="{Binding Project.ProjectName}" FontSize="14" Padding="7"/>
                     </StackPanel>
 
-                    <Grid Grid.Row="1" Margin="0 20 0 0">
+                    <Grid Grid.Row="1" Margin="0 10 0 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -80,7 +80,7 @@ HorizontalAlignment="Stretch" Background="Gray"/>
                 </Grid>
             </Grid>
 
-            <Grid Grid.Column="1" Margin="0 30 0 0">
+            <Grid Grid.Column="1" Margin="0 20 0 0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -96,7 +96,6 @@ HorizontalAlignment="Stretch" Background="Gray"/>
                         <TextBlock Text="Tjänst" FontSize="14"/>
                         <TextBox Text="{Binding Project.ServiceName}" FontSize="14" Padding="7"/>
                     </StackPanel>
-
                 </Grid>
 
                 <Grid Grid.Row="2" Margin="0 20 0 0">
@@ -106,24 +105,23 @@ HorizontalAlignment="Stretch" Background="Gray"/>
                     </Grid.ColumnDefinitions>
 
                     <StackPanel  Grid.Column="0"  Margin="0 0 10 0">
-                        <TextBlock Text="Pris/h" FontSize="14"/>
+                        <TextBlock Text="Pris/tim" FontSize="14"/>
                         <TextBox Text="{Binding Project.Price}" FontSize="14" Padding="7"/>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1"  Margin="10 0 0 0">
-                        <TextBlock Text="Total Kostnad" FontSize="14"/>
-                        <TextBox Text="{Binding Project.TotalPrice}" FontSize="14" Padding="7"/>
                     </StackPanel>
                 </Grid>
             </Grid>
+            
+            <StackPanel Grid.Row="1" Grid.Column="0" Margin="0 20 0 0">
+                <TextBlock Text="Total Kostnad" FontSize="14"/>
+                <TextBox Text="{Binding Project.TotalPrice}" FontSize="14" Padding="7" Margin="0 0 450 0"/>
+            </StackPanel>
 
-            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0 15 0 0">
-                <Button Command="{Binding GoToServiceEditViewCommand}"  CommandParameter="{Binding Project}" Content="Välj/Hantera Tjänster" FontSize="14" Padding="7" Margin="0 0 15 0"
-            />
+            <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                <Button Command="{Binding GoToServiceEditViewCommand}" CommandParameter="{Binding Project}" Content="Uppdatera" Style="{StaticResource StandardButton}"/>
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="3" Margin="0 20 0 0">
+        <Grid Grid.Row="3" Margin="0 10 0 0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -148,7 +146,7 @@ HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
-                    <Button Content="Välj/Hantera Anställda" FontSize="14" Padding="7" Margin="70 0 0 0" Command="{Binding GoToEmployeeEditViewCommand}" CommandParameter="{Binding Project}"/>
+                    <Button Content="Uppdatera" Margin="70 0 0 0" Command="{Binding GoToEmployeeEditViewCommand}" CommandParameter="{Binding Project}" Style="{StaticResource StandardButton}"/>
                 </StackPanel>
 
             </Grid>
@@ -198,12 +196,12 @@ HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
-                    <Button Content="Välj/Hantera kunder" FontSize="14" Padding="7" Margin="50 0 0 0" Command="{Binding GoToCustomerEditViewCommand}" CommandParameter="{Binding Project}"/>
+                    <Button Content="Uppdatera" Style="{StaticResource StandardButton}" Margin="50 0 0 0" Command="{Binding GoToCustomerEditViewCommand}" CommandParameter="{Binding Project}"/>
                 </StackPanel>
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="5" Margin="0 40 0 0">
+        <Grid Grid.Row="5" Margin="0 30 0 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -211,12 +209,12 @@ HorizontalAlignment="Stretch"/>
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" HorizontalAlignment="Left" Orientation="Horizontal">
-                <Button Command="{Binding DeleteProjectCommand}" CommandParameter="{Binding Project}" Content="Radera Projekt" FontSize="14" Padding="7" Margin="10 0 20 0"/>
+                <Button Content="Radera Projekt" Command="{Binding DeleteProjectCommand}" CommandParameter="{Binding Project}" Style="{StaticResource SecondDeleteButton}" Margin="10 0 0 0"/>
             </StackPanel>
 
             <StackPanel Grid.Column="2" HorizontalAlignment="Right" Orientation="Horizontal">
-                <Button Command="{Binding GoToListViewCommand}" Content="Avbryt" FontSize="14" Padding="7" Margin="20 0 10 0"/>
-                <Button Command="{Binding SaveCommand}" CommandParameter="{Binding Project}"  Content="Spara" FontSize="14" Padding="7" Margin="10 0 20 0"/>
+                <Button Content="Avbryt" Command="{Binding GoToListViewCommand}" Style="{StaticResource CancelButton}" Margin="20 0 10 0"/>
+                <Button Content="Spara" Command="{Binding SaveCommand}" CommandParameter="{Binding Project}" Style="{StaticResource SaveButton}" Margin="10 0 20 0"/>
             </StackPanel>
 
         </Grid>

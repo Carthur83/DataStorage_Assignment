@@ -14,11 +14,14 @@ public class CustomerService(ICustomerRepository customerRepository) : ICustomer
 {
     private readonly ICustomerRepository _customerRepository = customerRepository;
 
-    public async Task<bool> CreateCustomerAsync(CustomerRegistrationForm form)
+    public async Task<IResult> CreateCustomerAsync(CustomerRegistrationForm form)
     {
+        if (string.IsNullOrEmpty(form.CustomerName)) 
+            return Result.BadRequest("Fältet får inte vara tomt");
+
         var exists = await _customerRepository.ExistsAsync(x => x.CustomerName == form.CustomerName);
         if (exists)
-            return false;
+            return Result.AlreadyExists("Kund finns redan");
 
         await _customerRepository.BeginTransactionAsync();
 
@@ -28,13 +31,13 @@ public class CustomerService(ICustomerRepository customerRepository) : ICustomer
             await _customerRepository.SaveAsync();
 
             await _customerRepository.CommitTransactionAsync();
-            return true;
+            return Result.Ok();
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             await _customerRepository.RollbackTransactionAsync();
-            return false;
+            return Result.Error("Nåt gick fel, försök igen");
         }
     }
 

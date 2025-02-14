@@ -15,6 +15,9 @@ public class ServiceService(IServiceRepository serviceRepository) : IServiceServ
 
     public async Task<bool> CreateServiceAsync(ServiceRegistrationForm form)
     {
+        if (string.IsNullOrEmpty(form.ServiceName))
+            return false;
+
         var exists = await _serviceRepository.ExistsAsync(x => x.ServiceName == form.ServiceName);
 
         if (exists)

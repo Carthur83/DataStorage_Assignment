@@ -30,6 +30,10 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
        .Property(e => e.Id)
        .UseIdentityColumn(101, 1);
 
+        modelBuilder.Entity<EmployeeEntity>()
+       .Property(e => e.Id)
+       .UseIdentityColumn(1001, 1);
+
         modelBuilder.Entity<ProjectEntity>()
             .HasOne(x => x.Service)
             .WithMany()

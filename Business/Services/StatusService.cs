@@ -14,7 +14,7 @@ public class StatusService(IStatusRepository statusRepository) : IStatusService
     public async Task<StatusEntity> GetStatusAsync(string currentStatus)
     {
         if (currentStatus == null)
-            return null!;
+            currentStatus = "Ej Påbörjad";
 
         var statusEntity = await _statusRepository.GetAsync(x => x.StatusType == currentStatus);
         return statusEntity!;

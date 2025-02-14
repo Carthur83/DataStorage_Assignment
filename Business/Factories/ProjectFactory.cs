@@ -17,7 +17,9 @@ public static class ProjectFactory
             ProjectName = form.ProjectName,
             StartDate = DateTime.Parse(form.StartDate),
             EndDate = DateTime.Parse(form.EndDate),
-            TotalPrice = form.TotalPrice,           
+            TotalPrice = form.TotalPrice,
+            EmployeeId = form.ProjectManager.Id,
+            
         };
     }
 

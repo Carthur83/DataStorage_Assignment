@@ -15,23 +15,32 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="0 20 0 30">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="0*"/>
-            </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Margin="0 0 0 20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-            <StackPanel Grid.Column="1">
-                <TextBlock Text="Alla Projekt" Padding="5 0 0 0" Style="{StaticResource Headline}" />
-                <Border Height="0.5" Margin="0 10 0 0" HorizontalAlignment="Stretch" Background="Gray"/>
-            </StackPanel>
+            <Grid Grid.Row="0" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
 
+                <StackPanel Grid.Column="0" VerticalAlignment="Bottom">
+                    <TextBlock Text="ALLA PROJEKT" Style="{StaticResource Headline}" Margin="10 0 0 0"/>
+                </StackPanel>
+                <Button Grid.Column="1" Command="{Binding GoToAddViewCommand}" Background="#3c54d4" Content="Lägg till nytt" Style="{StaticResource StandardButton}" Margin="0 0 20 0"/>
+            </Grid>
+            <Border Grid.Row="1" Height="0.5" Margin="0 10 0 0" HorizontalAlignment="Stretch" Background="Gray"/>
         </Grid>
-        
-        <Grid Grid.Row="1">
+
+        <TextBlock Grid.Row="1" Text="Klicka på en rad för översikt" Margin="10 0 0 0"/>
+
+        <Grid Grid.Row="2">
             <ListView HorizontalAlignment="Center" Style="{StaticResource List}" ItemsSource="{Binding Projects}" SelectedItem="{Binding SelectedProject, Mode=TwoWay}" Width="1040" Height="500">
                 <ListView.View>
                     <GridView>
@@ -45,9 +54,5 @@
             </ListView>
 
         </Grid>
-        <StackPanel Grid.Row="2" Margin="60 40 60 20">
-            <Button Content="Lägg till nytt" Command="{Binding GoToAddViewCommand}"/>
-        </StackPanel>
-
     </Grid>
 </UserControl>

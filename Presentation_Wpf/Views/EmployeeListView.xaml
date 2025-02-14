@@ -8,10 +8,11 @@
              xmlns:viewmodels="clr-namespace:Presentation_Wpf.ViewModels"
              d:DataContext="{d:DesignInstance Type=viewmodels:EmployeeListViewModel}"
              mc:Ignorable="d"
-             Background="White"
-             d:DesignHeight="650" d:DesignWidth="1100">
+             Background="#e7e7e7"
+             d:DesignHeight="700" d:DesignWidth="1100">
     <Grid Margin="15">
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
@@ -89,12 +90,18 @@ HorizontalAlignment="Stretch" Background="Gray"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Margin="0 20" Orientation="Horizontal">
-                    <Button Content="Lägg till ny" Command="{Binding AddEmployeeCommand}" CommandParameter="{Binding EmployeeForm}" Margin="0 0 20 0" Padding="7"/>
-                    <Button Content="Uppdatera" Command="{Binding UpdateEmployeeCommand}" CommandParameter="{Binding EmployeeForm}" Margin="0 0 20 0" Padding="7"/>
-                    <Button Content="Avbryt" Command="{Binding GoToProjectAddViewCommand}" Padding="7"/>
-
+                    <Button Content="Lägg till" Command="{Binding AddEmployeeCommand}" CommandParameter="{Binding EmployeeForm}" Margin="0 0 20 0" Style="{StaticResource SaveButton}"/>
+                    <Button Content="Uppdatera" Command="{Binding UpdateEmployeeCommand}" CommandParameter="{Binding EmployeeForm}" Margin="0 0 20 0" Style="{StaticResource Update2Button}"/>
                 </StackPanel>
             </Grid>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1"  Content="Avbryt" HorizontalAlignment="Right" Command="{Binding GoToProjectAddViewCommand}" Style="{StaticResource CancelButton}"/>
         </Grid>
     </Grid>
 </UserControl>

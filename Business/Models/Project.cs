@@ -13,6 +13,7 @@ public class Project
     public int StatusId { get; set; }
     public string StatusType { get; set; } = null!;
     public int EmployeeId { get; set; }
+    public string EmployementNumber { get; set; } = null!;
     public string EmployeeFirstName { get; set; } = null!;
     public string EmployeeLastName { get; set; } = null!;
     public string ProjectManager { get; set; } = null!;

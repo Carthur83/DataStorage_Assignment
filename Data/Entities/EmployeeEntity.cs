@@ -8,6 +8,8 @@ public class EmployeeEntity
     [Key]
     public int Id { get; set; }
 
+    public string EmploymentNumber { get; set; } = null!;
+
     [Column(TypeName = "nvarchar(50)")]
     public string FirstName { get; set; } = null!;
    

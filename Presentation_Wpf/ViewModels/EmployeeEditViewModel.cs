@@ -30,6 +30,9 @@ public partial class EmployeeEditViewModel : ObservableObject
     [ObservableProperty]
     private string? _message;
 
+    [ObservableProperty]
+    private string? _deleteMessage;
+
     public EmployeeEditViewModel(IServiceProvider serviceProvider, IEmployeeService employeeService)
     {
         _serviceProvider = serviceProvider;
@@ -51,8 +54,11 @@ public partial class EmployeeEditViewModel : ObservableObject
     public async Task AddEmployee(EmployeeRegistrationForm employeeForm)
     {
         var result = await _employeeService.CreateEmployeeAsync(employeeForm);
-        GetEmployees();
-        EmployeeForm = new();
+        if (result.Success)
+        {
+            GetEmployees();
+        }
+        Message = result.ErrorMessage!;
     }
 
     [RelayCommand]
@@ -87,10 +93,11 @@ public partial class EmployeeEditViewModel : ObservableObject
     public async Task Delete(Employee employee)
     {
         var result = await _employeeService.DeleteEmployeeAsync(x => x.Id == employee.Id);
-        if (result)
+        if (result.Success)
         {
             GetEmployees();
         }
+        DeleteMessage = result.ErrorMessage!;
     }
 
     public async void GetEmployees()

@@ -168,7 +168,7 @@
 
                 <StackPanel Grid.Column="0">
                     <TextBlock Text="Anställningsnummer" FontSize="14"/>
-                    <TextBox Text="{Binding Form.ProjectManager.Id}" FontSize="14" Padding="7"/>
+                    <TextBox Text="{Binding Form.ProjectManager.EmploymentNumber}" FontSize="14" Padding="7"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Bottom">

@@ -2,7 +2,6 @@
 using Business.Factories;
 using Business.Interfaces;
 using Business.Models;
-using Business.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,13 +55,14 @@ public partial class CustomerListViewModel : ObservableObject
             GetCustomers();
         }
         Message = result.ErrorMessage!;
+        CustomerForm = new();
     }
 
     [RelayCommand]
     public async Task Delete(Customer customer)
     {
         var result = await _customerService.DeleteCustomerAsync(x => x.Id == customer.Id);
-        if (result)
+        if (result.Success)
         {
             GetCustomers();
         }

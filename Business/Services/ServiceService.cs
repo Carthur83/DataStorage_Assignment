@@ -8,36 +8,36 @@ using Data.Repositories;
 using System.Diagnostics;
 using System.Linq.Expressions;
 namespace Business.Services;
-public class ServiceService(IServiceRepository serviceRepository) : IServiceService
+public class ServiceService(IServiceRepository serviceRepository, IProjectRepository projectRepository) : IServiceService
 {
 
     private readonly IServiceRepository _serviceRepository = serviceRepository;
-
-    public async Task<bool> CreateServiceAsync(ServiceRegistrationForm form)
+    private readonly IProjectRepository _projectRepository = projectRepository;
+    public async Task<IResult> CreateServiceAsync(ServiceRegistrationForm form)
     {
         if (string.IsNullOrEmpty(form.ServiceName))
-            return false;
+            return Result.BadRequest("Alla fält måste fyllas i");
 
         var exists = await _serviceRepository.ExistsAsync(x => x.ServiceName == form.ServiceName);
 
         if (exists)
-            return false;
+            return Result.AlreadyExists("Tjänst finns redan");
 
         await _serviceRepository.BeginTransactionAsync();
-           
+
         try
         {
             await _serviceRepository.CreateAsync(ServiceFactory.CreateEntity(form));
             await _serviceRepository.SaveAsync();
 
             await _serviceRepository.CommitTransactionAsync();
-            return true;
+            return Result.Ok();
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             await _serviceRepository.RollbackTransactionAsync();
-            return false;
+            return Result.Error("Nåt gick fel, försök igen");
         }
     }
 
@@ -58,7 +58,7 @@ public class ServiceService(IServiceRepository serviceRepository) : IServiceServ
         return service;
     }
 
-    public async Task<Service> UpdateServiceAsync(Expression<Func<ServiceEntity, bool>> expression, Service updatedService)
+    public async Task<IResult> UpdateServiceAsync(Expression<Func<ServiceEntity, bool>> expression, Service updatedService)
     {
         if (updatedService == null)
             return null!;
@@ -67,39 +67,47 @@ public class ServiceService(IServiceRepository serviceRepository) : IServiceServ
         {
             var existingEntity = await _serviceRepository.GetAsync(expression);
             if (existingEntity == null)
-                return null!;
+                return Result.NotFound("Ingen tjänst hittades");
 
             var updatedEntity = ServiceFactory.CreateEntity(updatedService);
 
             _serviceRepository.Update(existingEntity, updatedEntity);
             await _serviceRepository.SaveAsync();
 
-            return ServiceFactory.Create(existingEntity);
+            var service = ServiceFactory.Create(existingEntity);
+            return Result.Ok();
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
-            return null!;
+            return Result.Error("Nåt gick fel, ej uppdaterat");
         }
     }
 
-    public async Task<bool> DeleteServiceAsync(Expression<Func<ServiceEntity, bool>> expression)
+    public async Task<IResult> DeleteServiceAsync(Expression<Func<ServiceEntity, bool>> expression)
     {
         if (expression == null)
-            return false;
+            return null!;
 
         try
         {
             var entity = await _serviceRepository.GetAsync(expression);
+            if (entity == null)
+                return Result.NotFound("Ingen tjänst hittades");
+
+            var existsInProject = await _projectRepository.ExistsAsync(x => x.ServiceId == entity.Id);
+            if (existsInProject)
+                return Result.BadRequest("Tjänst används i projekt, går ej ta bort");
+
             _serviceRepository.Delete(entity!);
             await _serviceRepository.SaveAsync();
 
-            return true;
+            return Result.Ok();
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
-            return false;
+            return Result.Error("Nåt gick fel, försök igen");
         }
     }
 

@@ -10,18 +10,19 @@ using System.Linq.Expressions;
 
 namespace Business.Services;
 
-public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployeeService
+public class EmployeeService(IEmployeeRepository employeeRepository, IProjectRepository projectRepository) : IEmployeeService
 {
     private readonly IEmployeeRepository _employeeRepository = employeeRepository;
+    private readonly IProjectRepository _projectRepository = projectRepository;
 
-    public async Task<bool> CreateEmployeeAsync(EmployeeRegistrationForm form)
+    public async Task<IResult> CreateEmployeeAsync(EmployeeRegistrationForm form)
     {
-        if (string.IsNullOrEmpty(form.FirstName) || string.IsNullOrEmpty(form.LastName))
-            return false;
+        if (string.IsNullOrEmpty(form.EmploymentNumber) || string.IsNullOrEmpty(form.FirstName) || string.IsNullOrEmpty(form.LastName))
+            return Result.BadRequest("Alla fält måste fyllas i!");
 
-        var exists = await _employeeRepository.ExistsAsync(x => x.Id == form.Id);
+        var exists = await _employeeRepository.ExistsAsync(x => x.EmploymentNumber == form.EmploymentNumber);
         if (exists)
-            return false;
+            return Result.AlreadyExists($"Anställd med anställningsnummer: {form.EmploymentNumber} finns redan");
 
         await _employeeRepository.BeginTransactionAsync();
 
@@ -31,13 +32,13 @@ public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployee
             await _employeeRepository.SaveAsync();
 
             await _employeeRepository.CommitTransactionAsync();
-            return true;
+            return Result.Ok();
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             await _employeeRepository.RollbackTransactionAsync();
-            return false;
+            return Result.Error("Nåt gick fel, försök igen"); ;
         }
     }
 
@@ -58,7 +59,7 @@ public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployee
         return employee;
     }
 
-    public async Task<Employee> UpdateEmployeeAsync(Expression<Func<EmployeeEntity, bool>> expression, Employee updatedEmployee)
+    public async Task<IResult> UpdateEmployeeAsync(Expression<Func<EmployeeEntity, bool>> expression, Employee updatedEmployee)
     {
         if (updatedEmployee == null)
             return null!;
@@ -67,40 +68,48 @@ public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployee
         {
             var existingEntity = await _employeeRepository.GetAsync(expression);
             if (existingEntity == null)
-                return null!;
+                return Result.NotFound("Ingen anställd hittades");
 
             var updatedEntity = EmployeeFactory.CreateEntity(updatedEmployee);
 
             _employeeRepository.Update(existingEntity, updatedEntity);
             await _employeeRepository.SaveAsync();
 
-            return EmployeeFactory.Create(existingEntity);
+            var employee = EmployeeFactory.Create(existingEntity);
+            return Result.Ok();
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
-            return null!;
+            return Result.Error("Nåt gick fel, ej uppdaterat");
         }
 
     }
 
-    public async Task<bool> DeleteEmployeeAsync(Expression<Func<EmployeeEntity, bool>> expression)
+    public async Task<IResult> DeleteEmployeeAsync(Expression<Func<EmployeeEntity, bool>> expression)
     {
         if (expression == null)
-            return false;
+            return null!;
 
         try
         {
             var entity = await _employeeRepository.GetAsync(expression);
+            if (entity == null)
+                return Result.NotFound("Ingen anställd hittades");
+
+            var existsInProject = await _projectRepository.ExistsAsync(x => x.EmployeeId == entity.Id);
+            if (existsInProject)
+                return Result.BadRequest("Anställd används i projekt, går ej ta bort");
+
             _employeeRepository.Delete(entity!);
             await _employeeRepository.SaveAsync();
 
-            return true;
+            return Result.Ok();
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
-            return false;
+            return Result.Error("Nåt gick fel, ej uppdaterat");
         }
     }
 

@@ -58,7 +58,7 @@ public class CustomerService(ICustomerRepository customerRepository) : ICustomer
         return customer;
     }
 
-    public async Task<Customer> UpdateCustomerAsync(Expression<Func<CustomerEntity, bool>> expression, Customer updatedCustomer)
+    public async Task<IResult> UpdateCustomerAsync(Expression<Func<CustomerEntity, bool>> expression, Customer updatedCustomer)
     {
         if (updatedCustomer == null)
             return null!;
@@ -67,40 +67,44 @@ public class CustomerService(ICustomerRepository customerRepository) : ICustomer
         {
             var existingEntity = await _customerRepository.GetAsync(expression);
             if (existingEntity == null)
-                return null!;
+                return Result.NotFound("Ingen kund hittades");
 
             var updatedEntity = CustomerFactory.Create(updatedCustomer);
 
             _customerRepository.Update(existingEntity, updatedEntity);
             await _customerRepository.SaveAsync();
 
-            return CustomerFactory.Create(existingEntity);
+            var customer = CustomerFactory.Create(existingEntity);
+            return Result.Ok();
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
-            return null!;
+            return Result.Error("Nåt gick fel, kund ej uppdaterad");
         }
 
     }
 
-    public async Task<bool> DeleteCustomerAsync(Expression<Func<CustomerEntity, bool>> expression)
+    public async Task<IResult> DeleteCustomerAsync(Expression<Func<CustomerEntity, bool>> expression)
     {
         if (expression == null)
-            return false;
+            return null!;
 
         try
         {
             var entity = await _customerRepository.GetAsync(expression);
+            if (entity == null)
+                return Result.NotFound("Ingen kund hittades");
+
             _customerRepository.Delete(entity!);
             await _customerRepository.SaveAsync();
 
-            return true;
+            return Result.Ok();
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
-            return false;
+            return Result.Error("Nåt gick fel, kund ej uppdaterad");
         }
     }
 

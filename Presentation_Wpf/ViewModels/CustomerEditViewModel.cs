@@ -61,7 +61,7 @@ public partial class CustomerEditViewModel : ObservableObject
     public async Task Delete(Customer customer)
     {
         var result = await _customerService.DeleteCustomerAsync(x => x.Id == customer.Id);
-        if (result)
+        if (result.Success)
         {
             GetCustomers();
         }

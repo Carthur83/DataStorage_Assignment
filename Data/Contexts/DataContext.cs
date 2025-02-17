@@ -19,7 +19,6 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             .HasIndex(x => x.StatusType)
             .IsUnique();
 
-        //följande kod är från chatgpt
         modelBuilder.Entity<StatusEntity>().HasData(
             new StatusEntity { Id = 1, StatusType = "Ej Påbörjad" },
             new StatusEntity { Id = 2, StatusType = "Pågående" },
@@ -30,14 +29,5 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
        .Property(e => e.Id)
        .UseIdentityColumn(101, 1);
 
-        modelBuilder.Entity<EmployeeEntity>()
-       .Property(e => e.Id)
-       .UseIdentityColumn(1001, 1);
-
-        modelBuilder.Entity<ProjectEntity>()
-            .HasOne(x => x.Service)
-            .WithMany()
-            .HasForeignKey(x => x.ServiceId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }

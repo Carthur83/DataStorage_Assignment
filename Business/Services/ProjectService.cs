@@ -24,7 +24,7 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
             return Result.BadRequest("Ogiltigt registreringsformulär");
 
         var customer = await _customerService.GetCustomerAsync(x => x.CustomerName == form.Customer.CustomerName);
-        var employee = await _employeeService.GetEmployeeAsync(x => x.Id == form.ProjectManager.Id);
+        var employee = await _employeeService.GetEmployeeAsync(x => x.FirstName == form.ProjectManager.FirstName);
         var service = await _serviceService.GetServiceAsync(x => x.ServiceName == form.Service.ServiceName);
         var status = await _statusService.GetStatusAsync(form.CurrentStatus);
 
@@ -38,14 +38,14 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
         if (employee == null)
         {
             var result = await _employeeService.CreateEmployeeAsync(form.ProjectManager);
-            if (result)
-                employee = await _employeeService.GetEmployeeAsync(x => x.Id == form.ProjectManager.Id);
+            if (result.Success)
+                employee = await _employeeService.GetEmployeeAsync(x => x.FirstName == form.ProjectManager.FirstName);
         }
 
         if (service == null)
         {
             var result = await _serviceService.CreateServiceAsync(form.Service);
-            if (result)
+            if (result.Success)
                 service = await _serviceService.GetServiceAsync(x => x.ServiceName == form.Service.ServiceName);
         } 
 
@@ -133,6 +133,7 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
 
             _projectRepository.Delete(entity!);
             await _projectRepository.SaveAsync();
+
             return Result.Ok();
         }
         catch (Exception ex)

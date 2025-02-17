@@ -26,6 +26,12 @@ public partial class ServiceListViewModel : ObservableObject
     [ObservableProperty]
     private ProjectRegistrationForm _projectForm = new();
 
+    [ObservableProperty]
+    private string? _message;
+
+    [ObservableProperty]
+    private string? _deleteMessage;
+
     public ServiceListViewModel(IServiceProvider serviceProvider, IServiceService serviceService)
     {
         _serviceProvider = serviceProvider;
@@ -47,17 +53,23 @@ public partial class ServiceListViewModel : ObservableObject
     public async Task AddService(ServiceRegistrationForm serviceForm)
     {
         var result = await _serviceService.CreateServiceAsync(serviceForm);
-        GetServices();
+        if (result.Success)
+        {
+            GetServices();
+        }
+        Message = result.ErrorMessage!;
+        ServiceForm = new();
     }
 
     [RelayCommand]
     public async Task Delete(Service service)
     {
         var result = await _serviceService.DeleteServiceAsync(x => x.ServiceName == service.ServiceName);
-        if (result)
+        if (result.Success)
         {
             GetServices();
         }
+        DeleteMessage = result.ErrorMessage!;
     }
 
     [RelayCommand]

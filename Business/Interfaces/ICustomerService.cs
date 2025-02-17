@@ -10,8 +10,8 @@ namespace Business.Interfaces
         Task<IResult> CreateCustomerAsync(CustomerRegistrationForm form);
         Task<IEnumerable<Customer>> GetAllCustomersAsync();
         Task<Customer> GetCustomerAsync(Expression<Func<CustomerEntity, bool>> expression);
-        Task<Customer> UpdateCustomerAsync(Expression<Func<CustomerEntity, bool>> expression, Customer updatedCustomer);
-        Task<bool> DeleteCustomerAsync(Expression<Func<CustomerEntity, bool>> expression);
+        Task<IResult> UpdateCustomerAsync(Expression<Func<CustomerEntity, bool>> expression, Customer updatedCustomer);
+        Task<IResult> DeleteCustomerAsync(Expression<Func<CustomerEntity, bool>> expression);
         Task<bool> CheckIfExistsAsync(Expression<Func<CustomerEntity, bool>> expression);
     }
 }

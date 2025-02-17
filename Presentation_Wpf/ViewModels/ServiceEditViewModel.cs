@@ -33,6 +33,12 @@ public partial class ServiceEditViewModel : ObservableObject
     [ObservableProperty]
     private Project _project = new();
 
+    [ObservableProperty]
+    private string? _message;
+
+    [ObservableProperty]
+    private string? _deleteMessage;
+
     [RelayCommand]
     public void GoToProjectEditView(Project project)
     {
@@ -47,8 +53,11 @@ public partial class ServiceEditViewModel : ObservableObject
     public async Task AddService(ServiceRegistrationForm serviceForm)
     {
         var result = await _serviceService.CreateServiceAsync(serviceForm);
-        GetServices();
-        ServiceForm = new();
+        if (result.Success)
+        {
+            GetServices();
+        }
+        Message = result.ErrorMessage!;
     }
 
     [RelayCommand]
@@ -83,10 +92,11 @@ public partial class ServiceEditViewModel : ObservableObject
     public async Task Delete(Service service)
     {
         var result = await _serviceService.DeleteServiceAsync(x => x.ServiceName == service.ServiceName);
-        if (result)
+        if (result.Success)
         {
             GetServices();
         }
+        DeleteMessage = result.ErrorMessage!;
     }
     public async void GetServices()
     {

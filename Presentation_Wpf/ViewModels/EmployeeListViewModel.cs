@@ -30,6 +30,9 @@ public partial class EmployeeListViewModel : ObservableObject
     [ObservableProperty]
     private string? _message;
 
+    [ObservableProperty]
+    private string? _deleteMessage;
+
     public EmployeeListViewModel(IServiceProvider serviceProvider, IEmployeeService employeeService)
     {
         _serviceProvider = serviceProvider;
@@ -60,7 +63,11 @@ public partial class EmployeeListViewModel : ObservableObject
     public async Task AddEmployee(EmployeeRegistrationForm employeeForm)
     {
         var result = await _employeeService.CreateEmployeeAsync(employeeForm);
-        GetEmployees();
+        if (result.Success)
+        {
+            GetEmployees();
+        }
+        Message = result.ErrorMessage!;
     }
 
     [RelayCommand]
@@ -83,6 +90,7 @@ public partial class EmployeeListViewModel : ObservableObject
         var projectAddViewModel = _serviceProvider.GetRequiredService<ProjectAddViewModel>();
         projectAddViewModel.Form = ProjectForm;
         projectAddViewModel.Form.ProjectManager.Id = employee.Id;
+        projectAddViewModel.Form.ProjectManager.EmploymentNumber = employee.EmployementNumber;
         projectAddViewModel.Form.ProjectManager.FirstName = employee.FirstName;
         projectAddViewModel.Form.ProjectManager.LastName = employee.LastName;
 
@@ -94,10 +102,11 @@ public partial class EmployeeListViewModel : ObservableObject
     public async Task Delete(Employee employee)
     {
         var result = await _employeeService.DeleteEmployeeAsync(x => x.Id == employee.Id);
-        if (result)
+        if (result.Success)
         {
             GetEmployees();
         }
+        DeleteMessage = result.ErrorMessage!;
     }
 
     public async void GetEmployees()

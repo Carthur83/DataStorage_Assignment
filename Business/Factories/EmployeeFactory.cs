@@ -10,7 +10,7 @@ public static class EmployeeFactory
     {
         return new EmployeeEntity
         {
-            Id = form.Id,
+            EmploymentNumber = form.EmploymentNumber,
             FirstName = form.FirstName,
             LastName = form.LastName,
         };
@@ -21,6 +21,7 @@ public static class EmployeeFactory
         return new Employee
         {
             Id = entity.Id,
+            EmployementNumber = entity.EmploymentNumber,
             FirstName = entity.FirstName,
             LastName = entity.LastName,
         };
@@ -31,6 +32,7 @@ public static class EmployeeFactory
         return new EmployeeEntity
         {
             Id = employee.Id,
+            EmploymentNumber = employee.EmployementNumber,
             FirstName = employee.FirstName,
             LastName = employee.LastName,
         };
@@ -43,6 +45,7 @@ public static class EmployeeFactory
             ProjectManager = new EmployeeRegistrationForm 
             { 
                 Id = employee.Id, 
+                EmploymentNumber = employee.EmployementNumber,
                 FirstName = employee.FirstName, 
                 LastName = employee.LastName  
             },
@@ -54,6 +57,7 @@ public static class EmployeeFactory
         return new EmployeeRegistrationForm
         {
             Id = employee.Id,
+            EmploymentNumber = employee.EmployementNumber,
             FirstName = employee.FirstName,
             LastName = employee.LastName,
         };
@@ -64,6 +68,7 @@ public static class EmployeeFactory
         return new Employee
         {
             Id= form.Id,
+            EmployementNumber = form.EmploymentNumber,
             FirstName = form.FirstName,
             LastName = form.LastName,
         };

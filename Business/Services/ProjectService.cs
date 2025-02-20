@@ -4,20 +4,19 @@ using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
 using Data.Interfaces;
-using Data.Repositories;
-using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
 namespace Business.Services;
 
-public class ProjectService(IProjectRepository repository, IServiceService serviceService, IEmployeeService employeeService, ICustomerService customerService, IStatusService statusService) : IProjectService
+public class ProjectService(IProjectRepository repository, IServiceService serviceService, IEmployeeService employeeService, ICustomerService customerService, IStatusService statusService, IProjectServiceService projectServiceService) : IProjectService
 {
     private readonly IProjectRepository _projectRepository = repository;
     private readonly IServiceService _serviceService = serviceService;
     private readonly IEmployeeService _employeeService = employeeService;
     private readonly ICustomerService _customerService = customerService;
     private readonly IStatusService _statusService = statusService;
+    private readonly IProjectServiceService _projectServiceService = projectServiceService;
     public async Task<IResult> CreateProjectAsync(ProjectRegistrationForm form)
     {
         if (form == null)
@@ -47,7 +46,7 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
             var result = await _serviceService.CreateServiceAsync(form.Service);
             if (result.Success)
                 service = await _serviceService.GetServiceAsync(x => x.ServiceName == form.Service.ServiceName);
-        } 
+        }
 
         await _projectRepository.BeginTransactionAsync();
 
@@ -55,17 +54,26 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
         {
             var projectEntity = ProjectFactory.Create(form);
             projectEntity.CustomerId = customer!.Id;
-            projectEntity.ServiceId = service!.Id;
             projectEntity.StatusId = status!.Id;
             projectEntity.EmployeeId = employee!.Id;
+
+            var projectServiceEntity = new ProjectServiceEntity
+            {
+                Project = projectEntity,
+                Service = service!,
+                Price = service!.Price
+            };
+
+            projectEntity.ProjectService = projectServiceEntity;
 
             await _projectRepository.CreateAsync(projectEntity);
             await _projectRepository.SaveAsync();
 
+            //await _projectServiceService.CreateProjectServiceAsync(projectServiceEntity);
+
             await _projectRepository.CommitTransactionAsync();
 
             return Result.Ok();
-
         }
         catch (Exception ex)
         {
@@ -82,7 +90,7 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
         return projects;
     }
 
-    public async Task<IResult> GetProjectAsync(Expression<Func<ProjectEntity, bool>> expression)
+    public async Task<Project> GetProjectAsync(Expression<Func<ProjectEntity, bool>> expression)
     {
         var entity = await _projectRepository.GetAsync(expression);
         if (entity == null)
@@ -90,7 +98,7 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
 
         var project = ProjectFactory.Create(entity);
 
-        return Result<Project>.Ok(project);
+        return project;
     }
 
     public async Task<IResult> UpdateProjectAsync(Expression<Func<ProjectEntity, bool>> expression, Project updatedProject)
@@ -103,6 +111,8 @@ public class ProjectService(IProjectRepository repository, IServiceService servi
             var existingEntity = await _projectRepository.GetAsync(expression);
             if (existingEntity == null)
                 return Result.NotFound("Inget projekt hittades");
+
+            await _projectServiceService.UpdatePojectServiceAsync(x => x.ProjectId == existingEntity.Id, updatedProject);
 
             var updatedEntity = ProjectFactory.Create(updatedProject);
 

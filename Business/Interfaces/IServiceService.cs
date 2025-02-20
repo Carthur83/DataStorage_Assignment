@@ -9,7 +9,7 @@ namespace Business.Interfaces
     {
         Task<IResult> CreateServiceAsync(ServiceRegistrationForm form);
         Task<IEnumerable<Service>> GetAllServicesAsync();
-        Task<Service> GetServiceAsync(Expression<Func<ServiceEntity, bool>> expression);
+        Task<ServiceEntity> GetServiceAsync(Expression<Func<ServiceEntity, bool>> expression);
         Task<IResult> UpdateServiceAsync(Expression<Func<ServiceEntity, bool>> expression, Service updatedService);
         Task<IResult> DeleteServiceAsync(Expression<Func<ServiceEntity, bool>> expression);
     }

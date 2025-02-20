@@ -8,16 +8,14 @@ namespace Business.Factories;
 
 public static class ProjectFactory
 {
-
     public static ProjectEntity Create(ProjectRegistrationForm form)
     {
-
         return new ProjectEntity
         {
             ProjectName = form.ProjectName,
             StartDate = DateTime.Parse(form.StartDate),
             EndDate = DateTime.Parse(form.EndDate),
-            TotalPrice = form.TotalPrice,            
+            TotalPrice = form.TotalPrice,         
         };
     }
 
@@ -39,15 +37,14 @@ public static class ProjectFactory
             EmployeeFirstName = entity.Employee.FirstName,
             EmployeeLastName = entity.Employee.LastName,
             ProjectManager = entity.Employee.FirstName + " " + entity.Employee.LastName,
-            ServiceId = entity.ServiceId,
-            ServiceName = entity.Service.ServiceName,
-            Price = entity.Service.Price,
+            ServiceId = entity.ProjectService.ServiceId,
+            ServiceName = entity.ProjectService.Service.ServiceName,
+            Price = entity.ProjectService.Price
         };
     }
 
     public static ProjectEntity Create(Project project)
     {
-
         return new ProjectEntity
         {
             Id = project.Id,
@@ -55,11 +52,9 @@ public static class ProjectFactory
             StartDate = project.StartDate,
             EndDate = project.EndDate,
             CustomerId = project.CustomerId,
-            StatusId= project.StatusId,
-            EmployeeId= project.EmployeeId,
+            StatusId = project.StatusId,
+            EmployeeId = project.EmployeeId,
             TotalPrice = project.TotalPrice,
-            ServiceId = project.ServiceId,
-            Service = new ServiceEntity { Id = project.ServiceId, ServiceName = project.ServiceName, Price = project.Price},
             Customer = new CustomerEntity { Id = project.CustomerId, CustomerName = project.CustomerName },
             Status = new StatusEntity { Id = project.StatusId, StatusType = project.StatusType },
             Employee = new EmployeeEntity { Id = project.EmployeeId, EmploymentNumber = project.EmployementNumber, FirstName = project.EmployeeFirstName, LastName = project.EmployeeLastName },

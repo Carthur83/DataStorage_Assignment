@@ -58,12 +58,14 @@ public partial class ServiceEditViewModel : ObservableObject
             GetServices();
         }
         Message = result.ErrorMessage!;
+        ServiceForm = new();
     }
 
     [RelayCommand]
-    public void GoToUpdate(Service service)
+    public async Task GoToUpdate(Service service)
     {
-        ServiceForm = ServiceFactory.CreateServiceForm(service);
+        var result = await _serviceService.GetServiceAsync(x => x.Id == service.Id);
+        ServiceForm = ServiceFactory.CreateServiceForm(result);
     }
 
     [RelayCommand]

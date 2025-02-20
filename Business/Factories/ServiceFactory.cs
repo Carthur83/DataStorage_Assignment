@@ -33,13 +33,13 @@ public static class ServiceFactory
         };
     }
 
-    public static ServiceRegistrationForm CreateServiceForm(Service service)
+    public static ServiceRegistrationForm CreateServiceForm(ServiceEntity entity)
     {
         return new ServiceRegistrationForm
         {
-            Id = service.Id,
-            ServiceName = service.ServiceName,
-            Price = service.Price,
+            Id = entity.Id,
+            ServiceName = entity.ServiceName,
+            Price = entity.Price,
         };
     }
 

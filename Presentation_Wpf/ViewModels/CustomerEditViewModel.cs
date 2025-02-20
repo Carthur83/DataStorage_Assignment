@@ -55,6 +55,7 @@ public partial class CustomerEditViewModel : ObservableObject
             GetCustomers();
         }
         Message = result.ErrorMessage!;
+        CustomerForm = new();
     }
 
     [RelayCommand]
@@ -90,6 +91,7 @@ public partial class CustomerEditViewModel : ObservableObject
     {
         await _customerService.UpdateCustomerAsync(x => x.Id == updatedCustomer.Id, CustomerFactory.Create(updatedCustomer));
         GetCustomers();
+        CustomerForm = new();
     }
 
     public async void GetCustomers()

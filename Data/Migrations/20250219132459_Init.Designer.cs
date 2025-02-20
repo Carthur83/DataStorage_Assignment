@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250214121320_Init")]
+    [Migration("20250219132459_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -48,7 +48,11 @@ namespace Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1001L);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("EmploymentNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -84,9 +88,6 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("date");
 
@@ -102,11 +103,36 @@ namespace Data.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("ServiceId");
-
                     b.HasIndex("StatusId");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("Data.Entities.ProjectServiceEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id", "ProjectId");
+
+                    b.HasIndex("ProjectId")
+                        .IsUnique();
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("ProjectServices");
                 });
 
             modelBuilder.Entity("Data.Entities.ServiceEntity", b =>
@@ -180,12 +206,6 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Entities.ServiceEntity", "Service")
-                        .WithMany()
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Data.Entities.StatusEntity", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
@@ -196,9 +216,37 @@ namespace Data.Migrations
 
                     b.Navigation("Employee");
 
-                    b.Navigation("Service");
-
                     b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("Data.Entities.ProjectServiceEntity", b =>
+                {
+                    b.HasOne("Data.Entities.ProjectEntity", "Project")
+                        .WithOne("ProjectService")
+                        .HasForeignKey("Data.Entities.ProjectServiceEntity", "ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Entities.ServiceEntity", "Service")
+                        .WithMany("ProjectServices")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("Data.Entities.ProjectEntity", b =>
+                {
+                    b.Navigation("ProjectService")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Entities.ServiceEntity", b =>
+                {
+                    b.Navigation("ProjectServices");
                 });
 #pragma warning restore 612, 618
         }

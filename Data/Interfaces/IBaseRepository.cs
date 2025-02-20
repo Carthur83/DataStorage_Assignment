@@ -11,6 +11,7 @@ public interface IBaseRepository<TEntity> where TEntity : class
     Task<IEnumerable<TEntity>> GetAllAsync();
     Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> expression);
     void Update(TEntity existingEntity, TEntity updatedEntity);
+    void Update(TEntity existingEntity);
     void Delete(TEntity entity);
     Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression);
     Task<int> SaveAsync();

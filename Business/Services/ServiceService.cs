@@ -48,14 +48,13 @@ public class ServiceService(IServiceRepository serviceRepository, IProjectReposi
         return services;
     }
 
-    public async Task<Service> GetServiceAsync(Expression<Func<ServiceEntity, bool>> expression)
+    public async Task<ServiceEntity> GetServiceAsync(Expression<Func<ServiceEntity, bool>> expression)
     {
         var entity = await _serviceRepository.GetAsync(expression);
         if (entity == null)
             return null!;
 
-        var service = ServiceFactory.Create(entity);
-        return service;
+        return entity;
     }
 
     public async Task<IResult> UpdateServiceAsync(Expression<Func<ServiceEntity, bool>> expression, Service updatedService)
@@ -95,7 +94,7 @@ public class ServiceService(IServiceRepository serviceRepository, IProjectReposi
             if (entity == null)
                 return Result.NotFound("Ingen tjänst hittades");
 
-            var existsInProject = await _projectRepository.ExistsAsync(x => x.ServiceId == entity.Id);
+            var existsInProject = await _projectRepository.ExistsAsync(x => x.ProjectService.ServiceId == entity.Id);
             if (existsInProject)
                 return Result.BadRequest("Tjänst används i projekt, går ej ta bort");
 

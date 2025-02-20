@@ -68,6 +68,7 @@ public partial class EmployeeListViewModel : ObservableObject
             GetEmployees();
         }
         Message = result.ErrorMessage!;
+        EmployeeForm = new();
     }
 
     [RelayCommand]

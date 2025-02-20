@@ -29,6 +29,9 @@ public partial class ProjectEditViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<StatusEntity> _statuses = [];
 
+    [ObservableProperty]
+    private string _message;
+
     [RelayCommand]
     public void GoToListView()
     {
@@ -42,9 +45,10 @@ public partial class ProjectEditViewModel : ObservableObject
         Project.StatusId = await _statusService.GetStatusIdAsync(Project.StatusType);
         
         var result = await _projectService.UpdateProjectAsync(x => x.Id == Project.Id, updatedProject);
-
-        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-        mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ProjectListViewModel>();
+        if (result.Success)
+        {
+            Message = "Projekt uppdaterat!";
+        }
     }
 
     [RelayCommand]

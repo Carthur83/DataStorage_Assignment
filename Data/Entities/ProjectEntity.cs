@@ -31,7 +31,5 @@ public class ProjectEntity
     public int EmployeeId { get; set; }
     public EmployeeEntity Employee { get; set; } = null!;
 
-
-    public int ServiceId { get; set; }
-    public ServiceEntity Service { get; set; } = null!;
+    public ProjectServiceEntity ProjectService { get; set; } = null!;
 }

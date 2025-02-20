@@ -10,6 +10,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<ProjectEntity> Projects { get; set; }
     public DbSet<EmployeeEntity> Employees { get; set; }
     public DbSet<ServiceEntity> Services { get; set; }
+    public DbSet<ProjectServiceEntity> ProjectServices { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,6 +29,19 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<ProjectEntity>()
        .Property(e => e.Id)
        .UseIdentityColumn(101, 1);
+
+        modelBuilder.Entity<ProjectServiceEntity>()
+       .Property(e => e.Id)
+       .UseIdentityColumn(1, 1);
+
+        modelBuilder.Entity<ProjectServiceEntity>()
+            .HasKey(ps => new { ps.Id, ps.ProjectId });
+
+        modelBuilder.Entity<ProjectServiceEntity>()
+            .HasOne(ps => ps.Service)
+            .WithMany(s => s.ProjectServices)
+            .HasForeignKey(ps => ps.ServiceId)
+            .OnDelete(DeleteBehavior.Restrict);
 
     }
 }

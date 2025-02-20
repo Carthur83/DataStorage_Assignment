@@ -22,20 +22,22 @@ public partial class App : Application
         _host = Host.CreateDefaultBuilder()
             .ConfigureServices(servies =>
             {
-                servies.AddDbContext<DataContext>(x => x.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Projects\DataStorage_Assignment\Data\Database\AssignmentDb_V2.mdf;Integrated Security=True;Connect Timeout=30"));
+                servies.AddDbContext<DataContext>(x => x.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Projects\DataStorage_Assignment\Data\Database\DataStorageAssignmentDb.mdf;Integrated Security=True;Connect Timeout=30"));
 
                 servies.AddScoped<IProjectRepository, ProjectRepository>();
                 servies.AddScoped<ICustomerRepository, CustomerRepository>();
                 servies.AddScoped<IEmployeeRepository, EmployeeRepository>();
                 servies.AddScoped<IServiceRepository, ServiceRepository>();
                 servies.AddScoped<IStatusRepository, StatusRepository>();
+                servies.AddScoped<IProjectServiceRepository, ProjectServiceRepository>();
 
                 servies.AddScoped<ICustomerService, CustomerService>();
                 servies.AddScoped<IProjectService, ProjectService>();
                 servies.AddScoped<IEmployeeService, EmployeeService>();
                 servies.AddScoped<IServiceService, ServiceService>();
                 servies.AddScoped<IStatusService, StatusService>();
-                
+                servies.AddScoped<IProjectServiceService, ProjectServiceService>();
+
                 servies.AddSingleton<MainViewModel>();
                 servies.AddSingleton<MainWindow>();
 

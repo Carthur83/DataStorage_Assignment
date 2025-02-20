@@ -62,6 +62,11 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
         _dbSet.Entry(existingEntity).CurrentValues.SetValues(updatedEntity);
     }
 
+    public virtual void Update(TEntity existingEntity)
+    {
+        _dbSet.Update(existingEntity);
+    }
+
     public virtual void Delete(TEntity entity)
     {
         _context.Remove(entity);

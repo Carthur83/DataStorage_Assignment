@@ -212,6 +212,8 @@ HorizontalAlignment="Stretch"/>
                 <Button Content="Radera Projekt" Command="{Binding DeleteProjectCommand}" CommandParameter="{Binding Project}" Style="{StaticResource SecondDeleteButton}" Margin="10 0 0 0"/>
             </StackPanel>
 
+            <TextBlock Grid.Column="1" Text="{Binding Message}" FontSize="16" Foreground="#2db624" TextAlignment="Center" VerticalAlignment="Center"/>
+
             <StackPanel Grid.Column="2" HorizontalAlignment="Right" Orientation="Horizontal">
                 <Button Content="Avbryt" Command="{Binding GoToListViewCommand}" Style="{StaticResource CancelButton}" Margin="20 0 10 0"/>
                 <Button Content="Spara" Command="{Binding SaveCommand}" CommandParameter="{Binding Project}" Style="{StaticResource SaveButton}" Margin="10 0 20 0"/>

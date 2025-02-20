@@ -10,7 +10,7 @@ public interface IProjectService
 {
     Task<IResult> CreateProjectAsync(ProjectRegistrationForm form);
     Task<IEnumerable<Project>> GetAllProjectAsync();
-    Task<IResult> GetProjectAsync(Expression<Func<ProjectEntity, bool>> expression);
+    Task<Project> GetProjectAsync(Expression<Func<ProjectEntity, bool>> expression);
     Task<IResult> UpdateProjectAsync(Expression<Func<ProjectEntity, bool>> expression, Project updatedProject);
     Task<IResult> DeleteProjectAsync(Expression<Func<ProjectEntity, bool>> expression);
     Task<IResult> CheckIfExistsAsync(Expression<Func<ProjectEntity, bool>> expression);

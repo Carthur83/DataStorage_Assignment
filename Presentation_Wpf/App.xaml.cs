@@ -22,7 +22,7 @@ public partial class App : Application
         _host = Host.CreateDefaultBuilder()
             .ConfigureServices(servies =>
             {
-                servies.AddDbContext<DataContext>(x => x.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Projects\DataStorage_Assignment\Data\Database\DataStorageAssignmentDb.mdf;Integrated Security=True;Connect Timeout=30"));
+                servies.AddDbContext<DataContext>(x => x.UseSqlServer(@""));
 
                 servies.AddScoped<IProjectRepository, ProjectRepository>();
                 servies.AddScoped<ICustomerRepository, CustomerRepository>();

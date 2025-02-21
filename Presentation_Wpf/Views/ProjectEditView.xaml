@@ -117,7 +117,7 @@ HorizontalAlignment="Stretch" Background="Gray"/>
             </StackPanel>
 
             <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-                <Button Command="{Binding GoToServiceEditViewCommand}" CommandParameter="{Binding Project}" Content="Uppdatera" Style="{StaticResource StandardButton}"/>
+                <Button Command="{Binding GoToServiceEditViewCommand}" CommandParameter="{Binding Project}" Content="Välj/Uppdatera" Style="{StaticResource StandardButton}"/>
             </StackPanel>
         </Grid>
 
@@ -146,7 +146,7 @@ HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
-                    <Button Content="Uppdatera" Margin="70 0 0 0" Command="{Binding GoToEmployeeEditViewCommand}" CommandParameter="{Binding Project}" Style="{StaticResource StandardButton}"/>
+                    <Button Content="Välj/Uppdatera" Margin="70 0 0 0" Command="{Binding GoToEmployeeEditViewCommand}" CommandParameter="{Binding Project}" Style="{StaticResource StandardButton}"/>
                 </StackPanel>
 
             </Grid>
@@ -196,7 +196,7 @@ HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
-                    <Button Content="Uppdatera" Style="{StaticResource StandardButton}" Margin="50 0 0 0" Command="{Binding GoToCustomerEditViewCommand}" CommandParameter="{Binding Project}"/>
+                    <Button Content="Välj/Uppdatera" Style="{StaticResource StandardButton}" Margin="50 0 0 0" Command="{Binding GoToCustomerEditViewCommand}" CommandParameter="{Binding Project}"/>
                 </StackPanel>
             </Grid>
         </Grid>

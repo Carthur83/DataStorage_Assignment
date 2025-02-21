@@ -12,5 +12,6 @@ namespace Business.Interfaces
         Task<ServiceEntity> GetServiceAsync(Expression<Func<ServiceEntity, bool>> expression);
         Task<IResult> UpdateServiceAsync(Expression<Func<ServiceEntity, bool>> expression, Service updatedService);
         Task<IResult> DeleteServiceAsync(Expression<Func<ServiceEntity, bool>> expression);
+        Task<bool> CheckIfExistsAsync(Expression<Func<ServiceEntity, bool>> expression);
     }
 }
